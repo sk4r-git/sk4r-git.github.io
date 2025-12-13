@@ -3,3 +3,6 @@ title = "TEST CONFIG"
 languageCode = "fr-fr"
 theme = "risotto"
 
+[taxonomies]
+category = ""
+tag = ""
