@@ -1,9 +1,10 @@
+# .github/workflows/deploy.yml
 name: Deploy Hugo site to GitHub Pages
 
 on:
   push:
     branches:
-      - main
+      - main  # Branche qui déclenche le déploiement
 
 permissions:
   contents: read
@@ -15,18 +16,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      # 1️⃣ Récupérer le repo
+      - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          submodules: true  # Si tu utilises des submodules, sinon ignore
 
+      # 2️⃣ Installer Hugo
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
         with:
-          hugo-version: latest
+          hugo-version: 'latest'
 
+      # 3️⃣ Construire le site
       - name: Build
         run: hugo --minify
 
-      - name: Upload Pages artifact
+      # 4️⃣ Publier sur GitHub Pages
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./public
@@ -41,4 +48,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses
