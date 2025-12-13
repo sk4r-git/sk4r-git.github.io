@@ -6,3 +6,8 @@ theme = "risotto"
 [taxonomies]
 category = ""
 tag = ""
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
