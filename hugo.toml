@@ -1,4 +1,4 @@
-baseURL = 'https://sk4r-git.github.io'
+baseURL = 'https://sk4r-git.github.io/'
 title = "TEST CONFIG"
 languageCode = "fr-fr"
 theme = "risotto"
