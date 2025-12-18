@@ -4,12 +4,19 @@ draft = false
 title = ''
 +++
 
+<div style="display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;">
 
-Bienvenue sur mon site.
+  <!-- Colonne gauche -->
+  <div style="flex: 1; min-width: 250px;">
+    <p>Bienvenue sur mon site.</p>
+    <p>Utilise le menu pour naviguer.</p>
+      <a href="/ctf/">CTF</a><br>
+      <a href="/notes/">Notes</a>
+  </div>
 
-Utilise le menu pour naviguer.
+  <!-- Colonne droite -->
+  <div>
+    <img src="/assets/sk4r.jpeg" alt="Présentation du site" width="200">
+  </div>
 
-<div class="homepage-buttons">
-  <a href="/ctf/">CTF</a>
-  <a href="/notes/">Notes</a>
 </div>
