@@ -2,38 +2,38 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>TEST CONFIG</title>
-    <link>http://localhost:1313/</link>
+    <link>https://sk4r-git.github.io/</link>
     <description>Recent content on TEST CONFIG</description>
     <generator>Hugo</generator>
     <language>fr-fr</language>
     <lastBuildDate>Sat, 13 Dec 2025 11:24:36 +0100</lastBuildDate>
-    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://sk4r-git.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Pwn</title>
-      <link>http://localhost:1313/ctf/pwn/</link>
+      <link>https://sk4r-git.github.io/ctf/pwn/</link>
       <pubDate>Sat, 13 Dec 2025 11:24:36 +0100</pubDate>
-      <guid>http://localhost:1313/ctf/pwn/</guid>
+      <guid>https://sk4r-git.github.io/ctf/pwn/</guid>
       <description></description>
     </item>
     <item>
       <title>Github</title>
-      <link>http://localhost:1313/notes/github/</link>
+      <link>https://sk4r-git.github.io/notes/github/</link>
       <pubDate>Sat, 13 Dec 2025 11:24:13 +0100</pubDate>
-      <guid>http://localhost:1313/notes/github/</guid>
+      <guid>https://sk4r-git.github.io/notes/github/</guid>
       <description></description>
     </item>
     <item>
       <title>Hugo</title>
-      <link>http://localhost:1313/notes/hugo/</link>
+      <link>https://sk4r-git.github.io/notes/hugo/</link>
       <pubDate>Sat, 13 Dec 2025 11:24:08 +0100</pubDate>
-      <guid>http://localhost:1313/notes/hugo/</guid>
+      <guid>https://sk4r-git.github.io/notes/hugo/</guid>
       <description></description>
     </item>
     <item>
       <title>About</title>
-      <link>http://localhost:1313/about/</link>
+      <link>https://sk4r-git.github.io/about/</link>
       <pubDate>Sat, 13 Dec 2025 11:10:20 +0100</pubDate>
-      <guid>http://localhost:1313/about/</guid>
+      <guid>https://sk4r-git.github.io/about/</guid>
       <description>&lt;p&gt;test about racine&lt;/p&gt;</description>
     </item>
   </channel>
