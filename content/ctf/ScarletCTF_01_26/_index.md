@@ -1,8 +1,9 @@
 +++
-date = '2025-12-13T11:24:21+01:00'
+date = '2026-01-12T18:26:42+01:00'
 draft = false
-title = 'Ctf'
+title = 'ScarletCTF_01_26'
 +++
+
 
 <div class="homepage-buttons">
   <a href="/ctf/">CTF</a>
