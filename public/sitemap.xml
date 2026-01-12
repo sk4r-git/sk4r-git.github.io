@@ -14,16 +14,12 @@
     <loc>http://localhost:1313/ctf/</loc>
     <lastmod>2025-12-13T11:24:21+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/notes/github/</loc>
-    <lastmod>2025-12-13T11:24:13+01:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/notes/hugo/</loc>
-    <lastmod>2025-12-13T11:24:08+01:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/notes/</loc>
     <lastmod>2025-12-13T11:24:03+01:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/about/</loc>
     <lastmod>2025-12-13T11:10:20+01:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/ctf/scarletctf_01_26/ruid_login/wu/</loc>
   </url>
 </urlset>

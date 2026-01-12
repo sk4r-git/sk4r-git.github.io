@@ -12,7 +12,6 @@ title = ''
     <p>Utilise le menu pour naviguer.</p>
       <a href="/ctf/">CTF</a><br>
       <a href="/notes/">Notes</a>
-      <a href="/ctf/ScarletCTF_01_26/ruid_login/">RUID Login</a>
   </div>
 
   <!-- Colonne droite -->

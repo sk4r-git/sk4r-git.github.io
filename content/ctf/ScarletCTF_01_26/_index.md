@@ -5,7 +5,8 @@ title = 'ScarletCTF_01_26'
 +++
 
 
+
 <div class="homepage-buttons">
   <a href="/ctf/">CTF</a>
-  <a href="/ctf/ScarletCTF_01_26/">Scarlet CTF, janvier 2026</a>
+  <a href="/ctf/scarletctf_01_26/ruid_login">Ruid Login</a>
 </div>
