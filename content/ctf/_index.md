@@ -5,6 +5,8 @@ title = 'Ctf'
 +++
 
 <div class="homepage-buttons">
+  <a href="/">Home</a>
   <a href="/ctf/">CTF</a>
+  <a href="/notes/">Notes</a><br><br>
   <a href="/ctf/scarletctf_01_26/">Scarlet CTF, janvier 2026</a>
 </div>

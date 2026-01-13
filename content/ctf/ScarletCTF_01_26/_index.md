@@ -7,6 +7,7 @@ title = 'ScarletCTF_01_26'
 
 
 <div class="homepage-buttons">
-  <a href="/ctf/">CTF</a>
-  <a href="/ctf/scarletctf_01_26/ruid_login">Ruid Login</a>
+  <a href="/ctf/">CTF</a><br><br>
+  <a href="/ctf/scarletctf_01_26/ruid_login">Ruid Login</a><br>
+  <a href="/ctf/scarletctf_01_26/speed_journal">Speed Journal</a>
 </div>

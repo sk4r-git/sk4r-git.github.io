@@ -10,6 +10,7 @@ title = ''
   <div style="flex: 1; min-width: 250px;">
     <p>Bienvenue sur mon site.</p>
     <p>Utilise le menu pour naviguer.</p>
+      <a href="/">Home</a><br>
       <a href="/ctf/">CTF</a><br>
       <a href="/notes/">Notes</a>
   </div>

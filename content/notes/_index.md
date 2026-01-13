@@ -6,6 +6,7 @@ title = 'Notes'
 
 
 <div class="homepage-buttons">
+  <a href="/">Home</a>
   <a href="/ctf/">CTF</a>
   <a href="/notes/">Notes</a>
 </div>

