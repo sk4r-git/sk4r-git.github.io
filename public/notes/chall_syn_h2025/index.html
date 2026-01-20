@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head><title>Challenge Synacktiv hiver 2025 &ndash; Sk4r</title>
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8"/>
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css" integrity="sha512-IW0nhlW5MgNydsXJO40En2EoCkTTjZhI3yuODrZIc8cQ4h1XcF53PsqDHa09NqnkXuIe0Oiyyj171BqZFwISBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+<link rel="stylesheet" href="https://sk4r-git.github.io/css/palettes/base16-dark.css">
+<link rel="stylesheet" href="https://sk4r-git.github.io/css/risotto.css">
+<link rel="stylesheet" href="https://sk4r-git.github.io/css/custom.css">
+
+
+
+
+
+
+
+
+
+<link rel="alternate" type="application/rss+xml" href="https://sk4r-git.github.io/notes/chall_syn_h2025/index.xml" title="Sk4r">
+
+
+
+<meta property="og:title" content="Challenge Synacktiv hiver 2025 &ndash; Sk4r" />
+<meta property="og:url" content="https://sk4r-git.github.io/notes/chall_syn_h2025/" />
+
+  
+
+<meta property="og:locale" content="fr-fr" />
+</head>
+
+    <body>
+        <div class="page">
+
+            <header class="page__header"><nav class="page__nav main-nav">
+    <ul>
+      <li class="nomarker"><h1 class="page__logo"><a href="https://sk4r-git.github.io/" class="page__logo-inner">Sk4r</a></h1></li>
+    
+    
+    </ul>
+</nav>
+
+</header>
+
+            <section class="page__body">
+    <h1 id="challenge-synacktiv-hiver-2025">Challenge Synacktiv hiver 2025</h1>
+
+    <div class="homepage-buttons">
+  <a href="/">Home</a>
+  <a href="/ctf/">CTF</a>
+  <a href="/notes/">Notes</a>
+</div>
+<p><br><br>
+En cette fin d&rsquo;année 2025, Synacktiv nous a invité à construire un binaire bien particulier, celui-ci devait respecter 3 règles :</p>
+<ul>
+<li>Être un palindrome;</li>
+<li>S&rsquo;auto afficher;</li>
+<li>Être le plus petit possible.</li>
+</ul>
+<p><strong>TL;DR;</strong></p>
+<div class="homepage-buttons">
+  <a href="/notes/chall_syn_h2025/check.sh">check.sh</a>
+  <a href="/notes/chall_syn_h2025/elf3">ma solution</a>
+</div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>└─$ xxd ../elf
+</span></span><span style="display:flex;"><span>00000000: 7f45 4c46 <span style="color:#ae81ff">0100</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0100</span>  .ELF............
+</span></span><span style="display:flex;"><span>00000010: <span style="color:#ae81ff">0200</span> <span style="color:#ae81ff">0300</span> ffff <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">2000</span> <span style="color:#ae81ff">0100</span> <span style="color:#ae81ff">0400</span> <span style="color:#ae81ff">0000</span>  ........ .......
+</span></span><span style="display:flex;"><span>00000020: b580 01c9 b004 eb06 2c00 <span style="color:#ae81ff">2000</span> <span style="color:#ae81ff">0100</span> 43b2  ........,. ...C.
+</span></span><span style="display:flex;"><span>00000030: 6fcd 804b b001 cd80 cd01 b04b 80cd 6fb2  o..K.......K..o.
+</span></span><span style="display:flex;"><span>00000040: <span style="color:#ae81ff">4300</span> <span style="color:#ae81ff">0100</span> <span style="color:#ae81ff">2000</span> 2c06 eb04 b0c9 <span style="color:#ae81ff">0180</span> b500  C... .,.........
+</span></span><span style="display:flex;"><span>00000050: <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0400</span> <span style="color:#ae81ff">0100</span> <span style="color:#ae81ff">2000</span> 00ff ff00 <span style="color:#ae81ff">0300</span> <span style="color:#ae81ff">0200</span>  ...... .........
+</span></span><span style="display:flex;"><span>00000060: <span style="color:#ae81ff">0100</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0146</span> 4c45 7f    ...........FLE.
+</span></span></code></pre></div><p>Étonnant mais le ElfHeader contient sa propre taille, permettant ainsi de le tronquer tout en le laissant valide.
+On peut ainsi conserver uniquement</p>
+<ul>
+<li><code>Elf32_Ehdr</code> (offset 0x00 à 0x2c), jusqu’à e_phentsize</li>
+<li><code>Elf32_Phdr</code> (offset 0x04 à 0x20), avec p_align tronqué</li>
+</ul>
+<p>Les headers tronqués :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C" data-lang="C"><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> e_ident[<span style="color:#ae81ff">16</span>];  
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint16_t</span>      e_type;    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint16_t</span>      e_machine; 
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span>      e_version;  
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span>      e_entry;  <span style="color:#75715e">// Entry point à 0x18 = 0x00010020
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">uint32_t</span>      e_phoff;  <span style="color:#75715e">// Programme Header à 0x1c = 0x04
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">uint32_t</span>      e_shoff;    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span>      e_flags; 
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint16_t</span>      e_ehsize; <span style="color:#75715e">// Taille du ELF Header
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">uint16_t</span>      e_phentsize;
+</span></span><span style="display:flex;"><span>} Elf32_Ehdr;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_type; 
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_offset; 
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_vaddr;       <span style="color:#75715e">// Addresse de chargement à 0x0c = 0x00010000
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">uint32_t</span> p_paddr;  
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_filesz; 
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_memsz;  
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_flags;  
+</span></span><span style="display:flex;"><span>} Elf32_Phdr;
+</span></span></code></pre></div><p>Après avoir imbriqué les headers l&rsquo;un dans l&rsquo;autre,
+Nous pouvons modifier les champs &lsquo;inutiles&rsquo; des headers en y insérant notre code.</p>
+<pre tabindex="0"><code>1) Le kernel parse le elf header
+2) Grace au elf header il sait où trouver le programme header, qu&#39;il parse 
+   aussi
+3) Si pas d&#39;erreur il charge le programme en 0x10000 comme spécifié par 
+   `Elf32_Phdr-&gt;p_vaddr` en 0x0c
+4) Regarde l&#39;entrypoint et execute la première instruction en 0x20
+5) b580 = mov $0x80, %ch     (ecx = 0x8000)
+6) 01c9 = add %ecx, %ecx     (ecx = 0x10000) 
+7) b004 = mov $0x4, %al      (eax = 4)    (write syscall)
+8) eb06 = jump + 6           (eip = 0x2e)
+9) 43 = inc %ebx             (ebx = 1)    (stdout)
+10) b26f = mov $0x6f, %dl    (edx = 0x6f) (taill du binaire)
+11) cd80 = int $0x80         (syscall write(1, 0x10000, 0x6f))
+12) 4b = dec %ebx            (ebx = 0)
+13) b001 = mov $1, %al       (eax = 1)
+14) cd80 = int $0x80         (syscall exit(0))
+</code></pre><p>Résultat :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>└─$ ../check.sh ../elf
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> First check passed: binary is a byte-wise palindrome.
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Second check passed: binary is a true quine, its output matches itself.
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Both checks passed: your binary is a very nice quinindrome!
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Your score: <span style="color:#ae81ff">111</span>
+</span></span></code></pre></div><p><img src="./final.png" alt="classement final" title="classement final"></p>
+<p>Un grand merci à <a href="https://www.synacktiv.com"><strong>Synacktiv</strong></a> pour l&rsquo;organisation de ce challenge.
+Félicitations à tous les participants, et tout particulièrement à  <a href="https://github.com/fishilico"><strong>ioonag</strong></a> pour sa solution en 81 octets.</p>
+<br>
+<p><strong>Explications</strong></p>
+<p>Naïvement, et pour un premier jet :</p>
+<ul>
+<li>Pour le palindrome, il suffit de copier coller &rsquo;en mirroir&rsquo; son binaire -&gt; abcd -&gt; abcddcba</li>
+<li>Pour reduire la taille on va le coder en assembleur</li>
+<li>Et pour l&rsquo;auto-affichage eh bien nous allons le coder</li>
+</ul>
+<p>Avec tout de même deux choix préliminaires, PIE c&rsquo;est mieux pour savoir quoi afficher
+et en 32 bits ça va surement prendre moins de place</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-asm" data-lang="asm"><span style="display:flex;"><span><span style="color:#a6e22e">.text</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">.globl</span> <span style="color:#66d9ef">_start</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>_start:
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">mov</span> <span style="color:#66d9ef">$0x08048000</span>, %ecx
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">inc</span> %ebx
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">mov</span> <span style="color:#66d9ef">$0x22e0</span>, %edx
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">mov</span> <span style="color:#66d9ef">$0x4</span>, %eax
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">int</span> <span style="color:#66d9ef">$0x80</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">dec</span> %ebx
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">mov</span> <span style="color:#66d9ef">$0x1</span>, %eax
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">int</span> <span style="color:#66d9ef">$0x80</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>f <span style="color:#f92672">=</span> open(<span style="color:#e6db74">&#34;./elf&#34;</span>, <span style="color:#e6db74">&#34;rb&#34;</span>)
+</span></span><span style="display:flex;"><span>d <span style="color:#f92672">=</span> f<span style="color:#f92672">.</span>read()
+</span></span><span style="display:flex;"><span>f<span style="color:#f92672">.</span>close()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>r <span style="color:#f92672">=</span> open(<span style="color:#e6db74">&#34;./elf2&#34;</span>, <span style="color:#e6db74">&#34;wb+&#34;</span>)
+</span></span><span style="display:flex;"><span>r<span style="color:#f92672">.</span>write(d)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(d)):
+</span></span><span style="display:flex;"><span>    r<span style="color:#f92672">.</span>write(d[<span style="color:#f92672">-</span>i<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>to_bytes())
+</span></span><span style="display:flex;"><span>r<span style="color:#f92672">.</span>close()
+</span></span></code></pre></div><p>Déjà, premier problème,
+Notre binaire est assez grand</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>00000000: 7f45 4c46 <span style="color:#ae81ff">0101</span> <span style="color:#ae81ff">0100</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span>  .ELF............
+</span></span><span style="display:flex;"><span>00000010: <span style="color:#ae81ff">0200</span> <span style="color:#ae81ff">0300</span> <span style="color:#ae81ff">0100</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0090</span> <span style="color:#ae81ff">0408</span> <span style="color:#ae81ff">3400</span> <span style="color:#ae81ff">0000</span>  ............4...
+</span></span><span style="display:flex;"><span>00000020: a810 <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">3400</span> <span style="color:#ae81ff">2000</span> <span style="color:#ae81ff">0200</span> <span style="color:#ae81ff">2800</span>  ........4. ...<span style="color:#f92672">(</span>.
+</span></span><span style="display:flex;"><span>00000030: <span style="color:#ae81ff">0500</span> <span style="color:#ae81ff">0400</span> <span style="color:#ae81ff">0100</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0080</span> <span style="color:#ae81ff">0408</span>  ................
+</span></span><span style="display:flex;"><span>00000040: <span style="color:#ae81ff">0080</span> <span style="color:#ae81ff">0408</span> <span style="color:#ae81ff">7400</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">7400</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0400</span> <span style="color:#ae81ff">0000</span>  ....t...t.......
+</span></span><span style="display:flex;"><span>00000050: <span style="color:#ae81ff">0010</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0100</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0010</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0090</span> <span style="color:#ae81ff">0408</span>  ................
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>00002280: <span style="color:#ae81ff">0804</span> <span style="color:#ae81ff">9000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">1000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0001</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">1000</span>  ................
+</span></span><span style="display:flex;"><span>00002290: <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0004</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0074</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0074</span> <span style="color:#ae81ff">0804</span> <span style="color:#ae81ff">8000</span>  .......t...t....
+</span></span><span style="display:flex;"><span>000022a0: <span style="color:#ae81ff">0804</span> <span style="color:#ae81ff">8000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0001</span> <span style="color:#ae81ff">0004</span> <span style="color:#ae81ff">0005</span>  ................
+</span></span><span style="display:flex;"><span>000022b0: <span style="color:#ae81ff">0028</span> <span style="color:#ae81ff">0002</span> <span style="color:#ae81ff">0020</span> <span style="color:#ae81ff">0034</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> 10a8  .<span style="color:#f92672">(</span>... .4........
+</span></span><span style="display:flex;"><span>000022c0: <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0034</span> <span style="color:#ae81ff">0804</span> <span style="color:#ae81ff">9000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0001</span> <span style="color:#ae81ff">0003</span> <span style="color:#ae81ff">0002</span>  ...4............
+</span></span><span style="display:flex;"><span>000022d0: <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0001</span> <span style="color:#ae81ff">0101</span> 464c 457f  ............FLE.
+</span></span></code></pre></div><p>Et avec beaucoup de données inutiles (la moitié au moins)
+Donc le kernel ne s&rsquo;embête pas à tout charger:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#f92672">(</span>gdb<span style="color:#f92672">)</span> b *0
+</span></span><span style="display:flex;"><span>Breakpoint <span style="color:#ae81ff">1</span> at 0x0
+</span></span><span style="display:flex;"><span><span style="color:#f92672">(</span>gdb<span style="color:#f92672">)</span> r
+</span></span><span style="display:flex;"><span>Starting program: /home/sk4r/GITHUB/Advent_2025/SYNAK/wu/elf2 
+</span></span><span style="display:flex;"><span>Warning:
+</span></span><span style="display:flex;"><span>Cannot insert breakpoint 1.
+</span></span><span style="display:flex;"><span>Cannot access memory at address 0x0
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">(</span>gdb<span style="color:#f92672">)</span> info proc map
+</span></span><span style="display:flex;"><span>process <span style="color:#ae81ff">126990</span>
+</span></span><span style="display:flex;"><span>Mapped address spaces:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Start Addr End Addr   Size       Offset     Perms File 
+</span></span><span style="display:flex;"><span>0x08048000 0x0804a000 0x2000     0x0        r-xp  /home/sk4r/GITHUB/Advent_2025/SYNACKTIV/wu/elf2 
+</span></span><span style="display:flex;"><span>0xf7ff6000 0xf7ffa000 0x4000     0x0        r--p  <span style="color:#f92672">[</span>vvar<span style="color:#f92672">]</span> 
+</span></span><span style="display:flex;"><span>0xf7ffa000 0xf7ffc000 0x2000     0x0        r--p  <span style="color:#f92672">[</span>vvar_vclock<span style="color:#f92672">]</span> 
+</span></span><span style="display:flex;"><span>0xf7ffc000 0xf7ffe000 0x2000     0x0        r-xp  <span style="color:#f92672">[</span>vdso<span style="color:#f92672">]</span> 
+</span></span><span style="display:flex;"><span>0xfffdc000 0xffffe000 0x22000    0x0        rwxp  <span style="color:#f92672">[</span>stack<span style="color:#f92672">]</span> 
+</span></span></code></pre></div><p>Tout n&rsquo;est pas chargé -&gt; tout n&rsquo;est pas printable
+C&rsquo;est mort pour cette solution.</p>
+<p>Nous allons donc directement modifier les structures.</p>
+<ul>
+<li>structure binaire craft à la main</li>
+<li>payload de code rajouté artificiellement</li>
+<li>et toujours un copié-collé mirroir pour la règle du palindrome</li>
+</ul>
+<p>un Elf se base sur deux principales structures pour fonctionner
+(j&rsquo;attends les WU des autres mais je n&rsquo;ai pas réussi à le faire marcher sans ces deux là)</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C" data-lang="C"><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> e_ident[<span style="color:#ae81ff">16</span>]; <span style="color:#75715e">/* Identification ELF */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint16_t</span>      e_type;      <span style="color:#75715e">/* Type de fichier (REL, EXEC, DYN…) */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint16_t</span>      e_machine;   <span style="color:#75715e">/* Architecture cible (e.g. EM_386) */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span>      e_version;   <span style="color:#75715e">/* Version ELF */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span>      e_entry;     <span style="color:#75715e">/* Adresse du point d&#39;entrée */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span>      e_phoff;     <span style="color:#75715e">/* Offset de la table des en-têtes de segments (program header) */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span>      e_shoff;     <span style="color:#75715e">/* Offset de la table des en-têtes de sections (section header) */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span>      e_flags;     <span style="color:#75715e">/* Flags spécifiques à l’architecture */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint16_t</span>      e_ehsize;    <span style="color:#75715e">/* Taille de cet en-tête ELF */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint16_t</span>      e_phentsize; <span style="color:#75715e">/* Taille d’une entrée de la table des segments */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint16_t</span>      e_phnum;     <span style="color:#75715e">/* Nombre d’entrées dans la table des segments */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint16_t</span>      e_shentsize; <span style="color:#75715e">/* Taille d’une entrée de la table des sections */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint16_t</span>      e_shnum;     <span style="color:#75715e">/* Nombre d’entrées dans la table des sections */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint16_t</span>      e_shstrndx;  <span style="color:#75715e">/* Index de la section contenant les noms de sections */</span>
+</span></span><span style="display:flex;"><span>} Elf32_Ehdr;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_type;   <span style="color:#75715e">/* Type du segment (LOAD, DYNAMIC, INTERP, NOTE, etc.) */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_offset; <span style="color:#75715e">/* Offset du segment dans le fichier */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_vaddr;  <span style="color:#75715e">/* Adresse virtuelle où le segment doit être chargé */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_paddr;  <span style="color:#75715e">/* Adresse physique (souvent ignorée) */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_filesz; <span style="color:#75715e">/* Taille du segment dans le fichier */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_memsz;  <span style="color:#75715e">/* Taille du segment en mémoire après chargement */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_flags;  <span style="color:#75715e">/* Permissions du segment (R, W, X) */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_align;  <span style="color:#75715e">/* Alignement requis du segment */</span>
+</span></span><span style="display:flex;"><span>} Elf32_Phdr;
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x90</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">12</span> 
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># shellcode sans optimisation</span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\xb9\x00\x80\x04\x08\x43\xba\xec\x00\x00\x00\x83\xc0\x04\xcd\x80\x4b\x31\xc0\x40\xcd\x80</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>SIZE <span style="color:#f92672">=</span> len(payload)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;&#39;&#39; struct Elf32_Ehdr &#39;&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>e_ident <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x7f</span><span style="color:#e6db74">ELF</span><span style="color:#ae81ff">\x01\x01\x01\x00</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\xff</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">8</span>
+</span></span><span style="display:flex;"><span>e_type <span style="color:#f92672">=</span> p16(<span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>e_machine <span style="color:#f92672">=</span> p16(<span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>e_version <span style="color:#f92672">=</span> p32(<span style="color:#ae81ff">0xffffffff</span>)
+</span></span><span style="display:flex;"><span>e_entry <span style="color:#f92672">=</span> p32(<span style="color:#ae81ff">0x08048060</span>) 
+</span></span><span style="display:flex;"><span>e_phoff <span style="color:#f92672">=</span> p32(<span style="color:#ae81ff">0x34</span>)  
+</span></span><span style="display:flex;"><span>e_shoff <span style="color:#f92672">=</span> p32(<span style="color:#ae81ff">0xffffffff</span>)  
+</span></span><span style="display:flex;"><span>e_flags <span style="color:#f92672">=</span> p32(<span style="color:#ae81ff">0xffffffff</span>)
+</span></span><span style="display:flex;"><span>e_ehsize <span style="color:#f92672">=</span> p16(<span style="color:#ae81ff">0x34</span>)        
+</span></span><span style="display:flex;"><span>e_phentsize <span style="color:#f92672">=</span> p16(<span style="color:#ae81ff">0x20</span>)    
+</span></span><span style="display:flex;"><span>e_phnum <span style="color:#f92672">=</span> p16(<span style="color:#ae81ff">1</span>)          
+</span></span><span style="display:flex;"><span>e_shentsize <span style="color:#f92672">=</span> p16(<span style="color:#ae81ff">0x28</span>)      
+</span></span><span style="display:flex;"><span>e_shnum <span style="color:#f92672">=</span> p16(<span style="color:#ae81ff">0</span>)          
+</span></span><span style="display:flex;"><span>e_shstrndx <span style="color:#f92672">=</span> p16(<span style="color:#ae81ff">0</span>)    
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;&#39;&#39; struct Elf32_Phdr &#39;&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p_type <span style="color:#f92672">=</span> p32(<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>p_offset <span style="color:#f92672">=</span> p32(<span style="color:#ae81ff">0x60</span>)
+</span></span><span style="display:flex;"><span>p_vaddr <span style="color:#f92672">=</span> p32(<span style="color:#ae81ff">0x08048060</span>)
+</span></span><span style="display:flex;"><span>p_paddr <span style="color:#f92672">=</span> p32(<span style="color:#ae81ff">0x08048060</span>)
+</span></span><span style="display:flex;"><span>p_filesz <span style="color:#f92672">=</span> p32(SIZE)
+</span></span><span style="display:flex;"><span>p_memsz <span style="color:#f92672">=</span> p32(SIZE)
+</span></span><span style="display:flex;"><span>p_flags <span style="color:#f92672">=</span> p32(<span style="color:#ae81ff">4</span>)
+</span></span><span style="display:flex;"><span>p_align <span style="color:#f92672">=</span> p32(<span style="color:#ae81ff">16</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">construct_elf_header</span>(buf):
+</span></span><span style="display:flex;"><span>    buf <span style="color:#f92672">+=</span> e_ident 
+</span></span><span style="display:flex;"><span>    buf <span style="color:#f92672">+=</span> e_type 
+</span></span><span style="display:flex;"><span>    buf <span style="color:#f92672">+=</span> e_machine 
+</span></span><span style="display:flex;"><span>    buf <span style="color:#f92672">+=</span> e_version 
+</span></span><span style="display:flex;"><span>    buf <span style="color:#f92672">+=</span> e_entry 
+</span></span><span style="display:flex;"><span>    buf <span style="color:#f92672">+=</span> e_phoff 
+</span></span><span style="display:flex;"><span>    buf <span style="color:#f92672">+=</span> e_shoff 
+</span></span><span style="display:flex;"><span>    buf <span style="color:#f92672">+=</span> e_flags 
+</span></span><span style="display:flex;"><span>    buf <span style="color:#f92672">+=</span> e_ehsize 
+</span></span><span style="display:flex;"><span>    buf <span style="color:#f92672">+=</span> e_phentsize 
+</span></span><span style="display:flex;"><span>    buf <span style="color:#f92672">+=</span> e_phnum 
+</span></span><span style="display:flex;"><span>    buf <span style="color:#f92672">+=</span> e_shentsize 
+</span></span><span style="display:flex;"><span>    buf <span style="color:#f92672">+=</span> e_shnum 
+</span></span><span style="display:flex;"><span>    buf <span style="color:#f92672">+=</span> e_shstrndx 
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> buf
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">construct_prog_header</span>(buf):
+</span></span><span style="display:flex;"><span>    buf <span style="color:#f92672">+=</span> p_type
+</span></span><span style="display:flex;"><span>    buf <span style="color:#f92672">+=</span> p_offset
+</span></span><span style="display:flex;"><span>    buf <span style="color:#f92672">+=</span> p_vaddr
+</span></span><span style="display:flex;"><span>    buf <span style="color:#f92672">+=</span> p_paddr
+</span></span><span style="display:flex;"><span>    buf <span style="color:#f92672">+=</span> p_filesz
+</span></span><span style="display:flex;"><span>    buf <span style="color:#f92672">+=</span> p_memsz
+</span></span><span style="display:flex;"><span>    buf <span style="color:#f92672">+=</span> p_flags
+</span></span><span style="display:flex;"><span>    buf <span style="color:#f92672">+=</span> p_align
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> buf
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>b <span style="color:#f92672">=</span> open(<span style="color:#e6db74">&#34;./elf&#34;</span>, <span style="color:#e6db74">&#34;wb+&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>bd <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>bd <span style="color:#f92672">=</span> construct_elf_header(bd)
+</span></span><span style="display:flex;"><span>bd <span style="color:#f92672">=</span> construct_prog_header(bd)
+</span></span><span style="display:flex;"><span>bd <span style="color:#f92672">+=</span> payload
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>b<span style="color:#f92672">.</span>write(bd)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(bd)):
+</span></span><span style="display:flex;"><span>    b<span style="color:#f92672">.</span>write(bd[<span style="color:#f92672">-</span>i<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>to_bytes())
+</span></span><span style="display:flex;"><span>b<span style="color:#f92672">.</span>close()
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>└─$ ./elf
+</span></span><span style="display:flex;"><span>ELF������������<span style="color:#e6db74">`</span>4��������4 <span style="color:#f92672">(</span><span style="color:#e6db74">```</span><span style="color:#e6db74">&#34;&#34;</span>�������������C����̀K1�@̀��@�1K�������������������<span style="color:#e6db74">&#34;��``( 4���������`������������FLE   
+</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>└─$ ../check.sh ./elf
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> First check passed: binary is a byte-wise palindrome.
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Second check passed: binary is a true quine, its output matches itself.
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Both checks passed: your binary is a very nice quinindrome!
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Your score: <span style="color:#ae81ff">236</span>
+</span></span></code></pre></div><p>parfait on a un premier binaire qui marche</p>
+<p>plutôt content
+&hellip;
+&hellip;
+<img src="./first.png" alt="premier classement" title="premier classement">
+plutôt pas content</p>
+<p>Bon va falloir faire mieux</p>
+<p>notre binaire ressemble à ça:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>└─$ xxd elf
+</span></span><span style="display:flex;"><span>00000000: 7f45 4c46 <span style="color:#ae81ff">0101</span> <span style="color:#ae81ff">0100</span> ffff ffff ffff ffff  .ELF............
+</span></span><span style="display:flex;"><span>00000010: <span style="color:#ae81ff">0200</span> <span style="color:#ae81ff">0300</span> ffff ffff <span style="color:#ae81ff">6080</span> <span style="color:#ae81ff">0408</span> <span style="color:#ae81ff">3400</span> <span style="color:#ae81ff">0000</span>  ........<span style="color:#e6db74">`</span>...4...
+</span></span><span style="display:flex;"><span>00000020: ffff ffff ffff ffff <span style="color:#ae81ff">3400</span> <span style="color:#ae81ff">2000</span> <span style="color:#ae81ff">0100</span> <span style="color:#ae81ff">2800</span>  ........4. ...<span style="color:#f92672">(</span>.
+</span></span><span style="display:flex;"><span>00000030: <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0100</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">6000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">6080</span> <span style="color:#ae81ff">0408</span>  ........<span style="color:#e6db74">`</span>...<span style="color:#e6db74">`</span>...
+</span></span><span style="display:flex;"><span>00000040: <span style="color:#ae81ff">6080</span> <span style="color:#ae81ff">0408</span> <span style="color:#ae81ff">2200</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">2200</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0400</span> <span style="color:#ae81ff">0000</span>  <span style="color:#e6db74">`</span>...<span style="color:#e6db74">&#34;...&#34;</span>.......
+</span></span><span style="display:flex;"><span>00000050: <span style="color:#ae81ff">1000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">9090</span> <span style="color:#ae81ff">9090</span> <span style="color:#ae81ff">9090</span> <span style="color:#ae81ff">9090</span> <span style="color:#ae81ff">9090</span> <span style="color:#ae81ff">9090</span>  ................
+</span></span><span style="display:flex;"><span>00000060: b900 <span style="color:#ae81ff">8004</span> <span style="color:#ae81ff">0843</span> baec <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0083</span> c004 cd80  .....C..........
+</span></span><span style="display:flex;"><span>00000070: 4b31 c040 cd80 80cd 40c0 314b 80cd 04c0  K1.@....@.1K....
+</span></span><span style="display:flex;"><span>00000080: <span style="color:#ae81ff">8300</span> <span style="color:#ae81ff">0000</span> ecba <span style="color:#ae81ff">4308</span> <span style="color:#ae81ff">0480</span> 00b9 <span style="color:#ae81ff">9090</span> <span style="color:#ae81ff">9090</span>  ......C.........
+</span></span><span style="display:flex;"><span>00000090: <span style="color:#ae81ff">9090</span> <span style="color:#ae81ff">9090</span> <span style="color:#ae81ff">9090</span> <span style="color:#ae81ff">9090</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0010</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0004</span>  ................
+</span></span><span style="display:flex;"><span>000000a0: <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0022</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0022</span> <span style="color:#ae81ff">0804</span> <span style="color:#ae81ff">8060</span> <span style="color:#ae81ff">0804</span> <span style="color:#ae81ff">8060</span>  ...<span style="color:#e6db74">&#34;...&#34;</span>...<span style="color:#e6db74">`</span>...<span style="color:#e6db74">`</span>
+</span></span><span style="display:flex;"><span>000000b0: <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0060</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0001</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0028</span> <span style="color:#ae81ff">0001</span>  ...<span style="color:#e6db74">`</span>.........<span style="color:#f92672">(</span>..
+</span></span><span style="display:flex;"><span>000000c0: <span style="color:#ae81ff">0020</span> <span style="color:#ae81ff">0034</span> ffff ffff ffff ffff <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0034</span>  . .4...........4
+</span></span><span style="display:flex;"><span>000000d0: <span style="color:#ae81ff">0804</span> <span style="color:#ae81ff">8060</span> ffff ffff <span style="color:#ae81ff">0003</span> <span style="color:#ae81ff">0002</span> ffff ffff  ...<span style="color:#e6db74">`</span>............
+</span></span><span style="display:flex;"><span>000000e0: ffff ffff <span style="color:#ae81ff">0001</span> <span style="color:#ae81ff">0101</span> 464c 457f            ........FLE.
+</span></span></code></pre></div><p>les \x90 prennent beaucoup de place, et notre code aussi finalement,
+la première optimisation a laquelle j&rsquo;ai pensé a été de mettre le code directement dans les headers car il y a pleins d&rsquo;endroits qui ne servent à rien. En changeant l&rsquo;entrypoint et en jumpant de zone inutiles en zones inutiles il y a largement la place pour nore code</p>
+
+
+    <ul>
+    
+    </ul>
+
+
+            </section>
+
+            <section class="page__aside">
+                <div class="aside__about">
+
+<ul class="aside__social-links">
+    
+</ul>
+</div>
+                <hr>
+                <div class="aside__content">
+    
+
+                </div>
+            </section>
+
+            <footer class="page__footer"><p>
+    
+    
+    
+    
+    
+    
+    
+    
+      
+      
+          
+            
+            
+                <br/><span class="active">$ echo $LANG<br/><b></b></span><br/>
+
+            
+          
+      
+    
+</p>
+<br /><br />
+<p class="copyright"></p>
+<p class="advertisement">Powered by <a href="https://gohugo.io/">hugo</a> and <a href="https://github.com/joeroe/risotto">risotto</a>.</p>
+</footer>
+
+        </div>
+    </body>
+
+</html>
