@@ -12,12 +12,6 @@ title = 'Ruid_login'
   <a href="/ctf/scarletctf_01_26/ruid_login/solve.py">solve.py</a><br>
 </div>
 
-# Scarlet CTF
-
-1er CTF de l'année un chall de pwn un peu cool
-
-## ruid_login
-
 
 ```bash
 └─$ checksec ./ruid_login
