@@ -8,8 +8,9 @@ title = ''
 
   <!-- Colonne gauche -->
   <div style="flex: 1; min-width: 250px;">
-    <p>Bienvenue sur mon site.</p>
-    <p>Utilise le menu pour naviguer.</p>
+    <p>Welcome on my site.</p>
+    <p>You can find some CTF write-ups, essentially pwn under 'ctf'</p>
+    <p>And some notes about different technical subjects under 'notes'</p>
       <a href="/">Home</a><br>
       <a href="/ctf/">CTF</a><br>
       <a href="/notes/">Notes</a>
