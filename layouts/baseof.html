@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="{{- site.Language.Lang -}}">
+
+<head>
+    {{- partial "head.html" . -}}
+</head>
+
+<body>
+    <div class="page">
+
+        <header class="page__header">
+            {{- partial "header.html" . -}}
+        </header>
+
+        <section class="page__body">
+            {{- block "main" . }}{{- end }}
+        </section>
+
+        <section class="page__aside">
+            <div class="aside__about">
+                {{- partial "about.html" . -}}
+            </div>
+
+            <div class="aside__content">
+                {{- block "aside" . }}{{- end }}
+            </div>
+            <div class="aside__toc">
+                {{ .TableOfContents }}
+            </div>
+        </section>
+
+        <section class="page__leftside">
+            <!-- {{ with site.Menus.main }}
+                <nav class="menu">
+                <ul>
+                {{ range . }}
+                    <li><a href="{{ .URL }}">{{ .Name }}</a></li>
+                {{ end }}
+                </ul>
+                </nav>
+                {{ end }} -->
+
+            <!-- {{ $currentPage := . }}
+                    {{ range .Site.Menus.main }}
+                    <li class="main-nav__item"><a class="nav-main-item{{ if or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) (eq ($currentPage.Permalink) (.URL | absLangURL)) }} active{{end}}" href="{{ .URL | absLangURL }}" title="{{ .Title }}">{{ .Name }}</a></li>
+                    {{ end }} -->
+
+<section class="page__leftside">
+    {{ with site.Menus.sidebar }}
+    <nav class="menu">
+        <ul>
+            {{ range sort . "Weight" }}
+            <li>
+                <a href="{{ .URL }}">{{ .Name }}</a>
+
+                {{ if .Children }}
+                <ul>
+                    {{ range sort .Children "Weight" "desc" }}
+                        <li><a href="{{ .URL }}">{{ .Name }}</a></li>
+                    {{ end }}
+                </ul>
+                {{ end }}
+
+            </li>
+            {{ end }}
+        </ul>
+    </nav>
+    {{ end }}
+</section>
+        </section>
+
+        <footer class="page__footer">
+            {{- partial "footer.html" . -}}
+        </footer>
+
+    </div>
+</body>
+
+</html>

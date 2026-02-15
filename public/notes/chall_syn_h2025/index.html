@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-    <head><title>Challenge Synacktiv hiver 2025 &ndash; Sk4r</title>
+<head><title>Challenge Synacktiv Winter 2025 &ndash; Sk4r</title>
 
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -31,7 +31,7 @@
 
 
 
-<meta property="og:title" content="Challenge Synacktiv hiver 2025 &ndash; Sk4r" />
+<meta property="og:title" content="Challenge Synacktiv Winter 2025 &ndash; Sk4r" />
 <meta property="og:url" content="https://sk4r-git.github.io/notes/chall_syn_h2025/" />
 
   
@@ -39,36 +39,31 @@
 <meta property="og:locale" content="fr-fr" />
 </head>
 
-    <body>
-        <div class="page">
+<body>
+    <div class="page">
 
-            <header class="page__header"><nav class="page__nav main-nav">
+        <header class="page__header"><nav class="page__nav main-nav">
     <ul>
       <li class="nomarker"><h1 class="page__logo"><a href="https://sk4r-git.github.io/" class="page__logo-inner">Sk4r</a></h1></li>
-    
     
     </ul>
 </nav>
 
 </header>
 
-            <section class="page__body">
-    <h1 id="challenge-synacktiv-hiver-2025">Challenge Synacktiv hiver 2025</h1>
+        <section class="page__body">
+    <h1 id="challenge-synacktiv-winter-2025">Challenge Synacktiv Winter 2025</h1>
 
-    <div class="homepage-buttons">
-  <a href="/">Home</a>
-  <a href="/ctf/">CTF</a>
-  <a href="/notes/">Notes</a>
-</div>
-<p><br><br>
-En cette fin d&rsquo;année 2025, Synacktiv nous a invité à construire un binaire bien particulier, celui-ci devait respecter 3 règles :</p>
-<ul>
-<li>Être un palindrome;</li>
-<li>S&rsquo;auto afficher;</li>
-<li>Être le plus petit possible.</li>
-</ul>
+    <br>
+Synacktiv invite us to construct a binary following some rules, this binary must
+    <ol>
+        <li>be a palindrome</li>
+        <li>print himself</li>
+        <li>be size minimal</li>
+    </ol>
 <p><strong>TL;DR;</strong></p>
 <div class="homepage-buttons">
+  Attachments:<br>
   <a href="/notes/chall_syn_h2025/check.sh">check.sh</a>
   <a href="/notes/chall_syn_h2025/elf3">ma solution</a>
 </div>
@@ -93,18 +88,18 @@ On peut ainsi conserver uniquement</p>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint16_t</span>      e_machine; 
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span>      e_version;  
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span>      e_entry;  <span style="color:#75715e">// Entry point à 0x18 = 0x00010020
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">uint32_t</span>      e_phoff;  <span style="color:#75715e">// Programme Header à 0x1c = 0x04
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">uint32_t</span>      e_shoff;    
+</span></span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span>      e_phoff;  <span style="color:#75715e">// Programme Header à 0x1c = 0x04
+</span></span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span>      e_shoff;    
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span>      e_flags; 
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint16_t</span>      e_ehsize; <span style="color:#75715e">// Taille du ELF Header
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">uint16_t</span>      e_phentsize;
+</span></span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint16_t</span>      e_phentsize;
 </span></span><span style="display:flex;"><span>} Elf32_Ehdr;
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_type; 
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_offset; 
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_vaddr;       <span style="color:#75715e">// Addresse de chargement à 0x0c = 0x00010000
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">uint32_t</span> p_paddr;  
+</span></span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_paddr;  
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_filesz; 
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_memsz;  
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_flags;  
@@ -359,23 +354,74 @@ la première optimisation a laquelle j&rsquo;ai pensé a été de mettre le code
     </ul>
 
 
-            </section>
+        </section>
 
-            <section class="page__aside">
-                <div class="aside__about">
+        <section class="page__aside">
+            <div class="aside__about">
 
 <ul class="aside__social-links">
     
 </ul>
 </div>
-                <hr>
-                <div class="aside__content">
+
+            <div class="aside__content">
     
 
-                </div>
-            </section>
+            </div>
+            <div class="aside__toc">
+                <nav id="TableOfContents"></nav>
+            </div>
+        </section>
 
-            <footer class="page__footer"><p>
+        <section class="page__leftside">
+            
+
+            
+
+<section class="page__leftside">
+    
+    <nav class="menu">
+        <ul>
+            
+            <li>
+                <a href="/ctf/">CTF</a>
+
+                
+                <ul>
+                    
+                        <li><a href="/ctf/0xfun_02_26/">OxFun 02/26</a></li>
+                    
+                        <li><a href="/ctf/pascalctf_01_26/">PascalCTF 01/26</a></li>
+                    
+                        <li><a href="/ctf/0xlaugh_01_26/">0xLaugh 01/26</a></li>
+                    
+                        <li><a href="/ctf/scarletctf_01_26/">Scarlet CTF 01/26</a></li>
+                    
+                </ul>
+                
+
+            </li>
+            
+            <li>
+                <a href="/notes/">Notes</a>
+
+                
+                <ul>
+                    
+                        <li><a href="/notes/chall_syn_h2025/">Chall Synacktiv 12/25</a></li>
+                    
+                </ul>
+                
+
+            </li>
+            
+        </ul>
+    </nav>
+    
+</section>
+        </section>
+
+        <footer class="page__footer"><p>
     
     
     
@@ -401,7 +447,7 @@ la première optimisation a laquelle j&rsquo;ai pensé a été de mettre le code
 <p class="advertisement">Powered by <a href="https://gohugo.io/">hugo</a> and <a href="https://github.com/joeroe/risotto">risotto</a>.</p>
 </footer>
 
-        </div>
-    </body>
+    </div>
+</body>
 
 </html>

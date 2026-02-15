@@ -1,24 +1,22 @@
 +++
 date = '2026-01-20T18:08:00+01:00'
 draft = false
-title = 'Challenge Synacktiv hiver 2025'
+title = 'Challenge Synacktiv Winter 2025'
 +++
 
-<div class="homepage-buttons">
-  <a href="/">Home</a>
-  <a href="/ctf/">CTF</a>
-  <a href="/notes/">Notes</a>
-</div>
 
-<br><br>
-En cette fin d'année 2025, Synacktiv nous a invité à construire un binaire bien particulier, celui-ci devait respecter 3 règles :
-- Être un palindrome;
-- S'auto afficher;
-- Être le plus petit possible.
 
+<br>
+Synacktiv invite us to construct a binary following some rules, this binary must
+    <ol>
+        <li>be a palindrome</li>
+        <li>print himself</li>
+        <li>be size minimal</li>
+    </ol>
 
 **TL;DR;**
 <div class="homepage-buttons">
+  Attachments:<br>
   <a href="/notes/chall_syn_h2025/check.sh">check.sh</a>
   <a href="/notes/chall_syn_h2025/elf3">ma solution</a>
 </div>

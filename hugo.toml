@@ -11,3 +11,55 @@ tag = ""
   [markup.goldmark]
     [markup.goldmark.renderer]
       unsafe = true
+  [markup.tableOfContents]
+    startLevel = 2
+    ordered = true
+    endLevel = 4
+
+[menu]
+
+
+  [[menu.sidebar]]
+  name = "OxFun 02/26"
+  url = "/ctf/0xfun_02_26/"
+  parent = "CTF"
+  weight = 4
+
+  [[menu.sidebar]]
+  name = "PascalCTF 01/26"
+  url = "/ctf/pascalctf_01_26/"
+  parent = "CTF"
+  weight = 3
+
+  [[menu.sidebar]]
+  name = "0xLaugh 01/26"
+  url = "/ctf/0xlaugh_01_26/"
+  parent = "CTF"
+  weight = 2
+
+
+  [[menu.sidebar]]
+  name = "Scarlet CTF 01/26"
+  url = "/ctf/scarletctf_01_26/"
+  parent = "CTF"
+  weight = 1
+
+  [[menu.sidebar]]
+  name = "Chall Synacktiv 12/25"
+  url = "/notes/chall_syn_h2025/"
+  parent = "Notes"
+  weight = 1
+
+
+
+
+  [[menu.sidebar]]
+    name = "CTF"
+    url = "/ctf/"
+    weight = 1
+
+  [[menu.sidebar]]
+    name = "Notes"
+    url = "/notes/"
+    weight = 2
+

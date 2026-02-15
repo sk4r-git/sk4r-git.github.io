@@ -9,11 +9,9 @@ title = ''
   <!-- Colonne gauche -->
   <div style="flex: 1; min-width: 250px;">
     <p>Welcome on my site.</p>
-    <p>You can find some CTF write-ups, essentially pwn under 'ctf'</p>
-    <p>And some notes about different technical subjects under 'notes'</p>
-      <a href="/">Home</a><br>
-      <a href="/ctf/">CTF</a><br>
-      <a href="/notes/">Notes</a>
+    <a>You can find some CTF write-ups, essentially pwn under 'CTF'</a><br>
+    <a>And some notes about different technical subjects under 'Notes'</a><br><br>
+    <a>Feel free to contact me on dicord @5k4r_
   </div>
 
   <!-- Colonne droite -->
