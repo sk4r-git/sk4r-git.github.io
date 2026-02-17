@@ -14,12 +14,13 @@ Synacktiv invite us to construct a binary following some rules, this binary must
         <li>be size minimal</li>
     </ol>
 
-**TL;DR;**
-<div class="homepage-buttons">
-  Attachments:<br>
-  <a href="/notes/chall_syn_h2025/check.sh">check.sh</a>
-  <a href="/notes/chall_syn_h2025/elf3">ma solution</a>
-</div>
+## TL; DR;
+<br>
+The binary must pass the check:<br>
+<a href="/notes/chall_syn_h2025/check.sh">check.sh</a><br>
+and mine is here:<br>
+<a href="/notes/chall_syn_h2025/elf">elf</a>
+
 
 
 ```bash
@@ -32,53 +33,55 @@ Synacktiv invite us to construct a binary following some rules, this binary must
 00000050: 0000 0400 0100 2000 00ff ff00 0300 0200  ...... .........
 00000060: 0100 0000 0000 0000 0000 0146 4c45 7f    ...........FLE.
 ```
-Étonnant mais le ElfHeader contient sa propre taille, permettant ainsi de le tronquer tout en le laissant valide.
-On peut ainsi conserver uniquement
+Surprisingly, the ElfHeader contains its own size, allowing it to be truncated while still remaining valid.<br>
+It also contains the address of the program header, allowing us to choose where to place it and thus overlap these two structures.<br>
 
-- `Elf32_Ehdr` (offset 0x00 à 0x2c), jusqu’à e_phentsize
-- `Elf32_Phdr` (offset 0x04 à 0x20), avec p_align tronqué
+This way, only these two header parts can be kept:
 
-Les headers tronqués :
+- `Elf32_Ehdr` (offset 0x00 à 0x2c), up to e_phentsize
+- `Elf32_Phdr` (offset 0x04 à 0x20), with only p_align truncated
+
+truncated headers :
 ```C
 typedef struct {
     unsigned char e_ident[16];  
     uint16_t      e_type;    
     uint16_t      e_machine; 
     uint32_t      e_version;  
-    uint32_t      e_entry;  // Entry point à 0x18 = 0x00010020
-    uint32_t      e_phoff;  // Programme Header à 0x1c = 0x04
+    uint32_t      e_entry;  // Entry point at 0x18 = 0x00010020
+    uint32_t      e_phoff;  // Program Header at 0x1c = 0x04
     uint32_t      e_shoff;    
     uint32_t      e_flags; 
-    uint16_t      e_ehsize; // Taille du ELF Header
+    uint16_t      e_ehsize; // Size of ELF Header
     uint16_t      e_phentsize;
 } Elf32_Ehdr;
 
 typedef struct {
     uint32_t p_type; 
     uint32_t p_offset; 
-    uint32_t p_vaddr;       // Addresse de chargement à 0x0c = 0x00010000
+    uint32_t p_vaddr;       // Load adress at 0x0c = 0x00010000
     uint32_t p_paddr;  
     uint32_t p_filesz; 
     uint32_t p_memsz;  
     uint32_t p_flags;  
 } Elf32_Phdr;
 ```
-Après avoir imbriqué les headers l'un dans l'autre, 
-Nous pouvons modifier les champs 'inutiles' des headers en y insérant notre code.
+After nesting the headers inside one another,
+we can modify the “unused” header fields by inserting our code into them.
 
 ```
-1) Le kernel parse le elf header
-2) Grace au elf header il sait où trouver le programme header, qu'il parse 
-   aussi
-3) Si pas d'erreur il charge le programme en 0x10000 comme spécifié par 
-   `Elf32_Phdr->p_vaddr` en 0x0c
-4) Regarde l'entrypoint et execute la première instruction en 0x20
+1) The kernel parses the ELF header
+2) Thanks to the ELF header, it knows where to find the program header,
+   which it also parses
+3) If there is no error, it loads the program at 0x10000 as specified by
+   `Elf32_Phdr->p_vaddr` at 0x0c
+4) It checks the entry point and executes the first instruction at 0x20
 5) b580 = mov $0x80, %ch     (ecx = 0x8000)
 6) 01c9 = add %ecx, %ecx     (ecx = 0x10000) 
 7) b004 = mov $0x4, %al      (eax = 4)    (write syscall)
 8) eb06 = jump + 6           (eip = 0x2e)
 9) 43 = inc %ebx             (ebx = 1)    (stdout)
-10) b26f = mov $0x6f, %dl    (edx = 0x6f) (taill du binaire)
+10) b26f = mov $0x6f, %dl    (edx = 0x6f) (binary size)
 11) cd80 = int $0x80         (syscall write(1, 0x10000, 0x6f))
 12) 4b = dec %ebx            (ebx = 0)
 13) b001 = mov $1, %al       (eax = 1)
@@ -97,21 +100,22 @@ Résultat :
 
 ![classement final](./final.png "classement final")
 
-Un grand merci à <a href="https://www.synacktiv.com"><strong>Synacktiv</strong></a> pour l'organisation de ce challenge.
-Félicitations à tous les participants, et tout particulièrement à  <a href="https://github.com/fishilico"><strong>ioonag</strong></a> pour sa solution en 81 octets.
-
+Many thanks to <a href="https://www.synacktiv.com"><strong>Synacktiv</strong></a> for organizing this challenge.
+Congratulations to all the participants, and especially to <a href="https://github.com/fishilico"><strong>ioonag</strong></a> for their 81-byte solution.
 
 <br>
 
-**Explications**
+## Explanation
 
-Naïvement, et pour un premier jet :
-- Pour le palindrome, il suffit de copier coller 'en mirroir' son binaire -> abcd -> abcddcba
-- Pour reduire la taille on va le coder en assembleur
-- Et pour l'auto-affichage eh bien nous allons le coder
+### First attempt 
+<br>
+Naively, for a first draft:
 
-Avec tout de même deux choix préliminaires, PIE c'est mieux pour savoir quoi afficher
-et en 32 bits ça va surement prendre moins de place
+- For the palindrome, we can simply copy and paste the binary in “mirror” form → abcd → abcddcba
+- To reduce the size, we’ll write it in assembly
+- And for the self-printing part, we’ll just implement it ourselves
+
+With two preliminary choices nonetheless: PIE is better for knowing what to print, and using 32-bit will probably take less space.
 
 ```asm
 .text
@@ -141,8 +145,8 @@ for i in range(len(d)):
 r.close()
 ```
 
-Déjà, premier problème,
-Notre binaire est assez grand
+Already, the first problem:
+our binary is quite large.
 
 ```bash
 00000000: 7f45 4c46 0101 0100 0000 0000 0000 0000  .ELF............
@@ -160,8 +164,8 @@ Notre binaire est assez grand
 000022d0: 0000 0000 0000 0000 0001 0101 464c 457f  ............FLE.
 ```
 
-Et avec beaucoup de données inutiles (la moitié au moins)
-Donc le kernel ne s'embête pas à tout charger:
+And it contains a lot of unnecessary data (at least half of it).
+So the kernel doesn’t bother loading everything:
 
 ```bash
 (gdb) b *0
@@ -184,44 +188,47 @@ Start Addr End Addr   Size       Offset     Perms File
 0xfffdc000 0xffffe000 0x22000    0x0        rwxp  [stack] 
 ```
 
-Tout n'est pas chargé -> tout n'est pas printable
-C'est mort pour cette solution.
+Not everything is loaded → not everything is printable.
+So this solution is dead.
 
-Nous allons donc directement modifier les structures.
-- structure binaire craft à la main
-- payload de code rajouté artificiellement
-- et toujours un copié-collé mirroir pour la règle du palindrome
+### Second attempt
+<br>
+We’ll therefore directly modify the structures:
 
-un Elf se base sur deux principales structures pour fonctionner
-(j'attends les WU des autres mais je n'ai pas réussi à le faire marcher sans ces deux là)
+- handcrafted binary structure
+- code payload artificially added
+- and still a mirrored copy-paste for the palindrome rule
+
+An ELF relies on two main structures to function
+(I’m waiting for other write-ups, but I couldn’t get it working without these two).
 
 ```C
 typedef struct {
-    unsigned char e_ident[16]; /* Identification ELF */
-    uint16_t      e_type;      /* Type de fichier (REL, EXEC, DYN…) */
-    uint16_t      e_machine;   /* Architecture cible (e.g. EM_386) */
-    uint32_t      e_version;   /* Version ELF */
-    uint32_t      e_entry;     /* Adresse du point d'entrée */
-    uint32_t      e_phoff;     /* Offset de la table des en-têtes de segments (program header) */
-    uint32_t      e_shoff;     /* Offset de la table des en-têtes de sections (section header) */
-    uint32_t      e_flags;     /* Flags spécifiques à l’architecture */
-    uint16_t      e_ehsize;    /* Taille de cet en-tête ELF */
-    uint16_t      e_phentsize; /* Taille d’une entrée de la table des segments */
-    uint16_t      e_phnum;     /* Nombre d’entrées dans la table des segments */
-    uint16_t      e_shentsize; /* Taille d’une entrée de la table des sections */
-    uint16_t      e_shnum;     /* Nombre d’entrées dans la table des sections */
-    uint16_t      e_shstrndx;  /* Index de la section contenant les noms de sections */
+    unsigned char e_ident[16]; /* ELF identification */
+    uint16_t      e_type;      /* File type (REL, EXEC, DYN…) */
+    uint16_t      e_machine;   /* Target architecture (e.g. EM_386) */
+    uint32_t      e_version;   /* ELF version */
+    uint32_t      e_entry;     /* Entry point address */
+    uint32_t      e_phoff;     /* Offset of the program header table */
+    uint32_t      e_shoff;     /* Offset of the section header table */
+    uint32_t      e_flags;     /* Architecture-specific flags */
+    uint16_t      e_ehsize;    /* Size of this ELF header */
+    uint16_t      e_phentsize; /* Size of one program header entry */
+    uint16_t      e_phnum;     /* Number of entries in the program header table */
+    uint16_t      e_shentsize; /* Size of one section header entry */
+    uint16_t      e_shnum;     /* Number of entries in the section header table */
+    uint16_t      e_shstrndx;  /* Index of the section containing section names */
 } Elf32_Ehdr;
 
 typedef struct {
-    uint32_t p_type;   /* Type du segment (LOAD, DYNAMIC, INTERP, NOTE, etc.) */
-    uint32_t p_offset; /* Offset du segment dans le fichier */
-    uint32_t p_vaddr;  /* Adresse virtuelle où le segment doit être chargé */
-    uint32_t p_paddr;  /* Adresse physique (souvent ignorée) */
-    uint32_t p_filesz; /* Taille du segment dans le fichier */
-    uint32_t p_memsz;  /* Taille du segment en mémoire après chargement */
-    uint32_t p_flags;  /* Permissions du segment (R, W, X) */
-    uint32_t p_align;  /* Alignement requis du segment */
+    uint32_t p_type;   /* Segment type (LOAD, DYNAMIC, INTERP, NOTE, etc.) */
+    uint32_t p_offset; /* Segment offset in the file */
+    uint32_t p_vaddr;  /* Virtual address where the segment must be loaded */
+    uint32_t p_paddr;  /* Physical address (often ignored) */
+    uint32_t p_filesz; /* Segment size in the file */
+    uint32_t p_memsz;  /* Segment size in memory after loading */
+    uint32_t p_flags;  /* Segment permissions (R, W, X) */
+    uint32_t p_align;  /* Required segment alignment */
 } Elf32_Phdr;
 ```
 
@@ -229,9 +236,10 @@ typedef struct {
 from pwn import *
 
 
-payload = b"\x90"*12 
-# shellcode sans optimisation
-payload += b"\xb9\x00\x80\x04\x08\x43\xba\xec\x00\x00\x00\x83\xc0\x04\xcd\x80\x4b\x31\xc0\x40\xcd\x80"
+payload = b"\x90"*12 # for alignment
+# non-optimized shellcode
+payload += b"\xb9\x00\x80\x04\x08\x43\xba\xec\x00\x00\x00" 
+payload += b"\x83\xc0\x04\xcd\x80\x4b\x31\xc0\x40\xcd\x80"
 
 SIZE = len(payload)
 
@@ -321,17 +329,16 @@ ELF������������`4��������4 (```""���
 [+] Both checks passed: your binary is a very nice quinindrome!
 [+] Your score: 236
 ```
-parfait on a un premier binaire qui marche
+Perfect, we get our first working binary.<br>
+but <br>
+...<br>
+...
 
-plutôt content
-...
-...
 ![premier classement](./first.png "premier classement")
-plutôt pas content
 
-Bon va falloir faire mieux
+10 on 12, not really good.
 
-notre binaire ressemble à ça:
+Our binary actually looks like that:
 
 ```bash
 └─$ xxd elf
@@ -352,6 +359,97 @@ notre binaire ressemble à ça:
 000000e0: ffff ffff 0001 0101 464c 457f            ........FLE.
 ```
 
-les \x90 prennent beaucoup de place, et notre code aussi finalement,
-la première optimisation a laquelle j'ai pensé a été de mettre le code directement dans les headers car il y a pleins d'endroits qui ne servent à rien. En changeant l'entrypoint et en jumpant de zone inutiles en zones inutiles il y a largement la place pour nore code
+### First optimization
+<br>
+The \x90 bytes take up a lot of space, and our code does too in the end.
+The first optimization I thought of was to put the code directly into the headers, since there are plenty of places that aren’t used. By changing the entry point and jumping from unused areas to other unused areas, there’s more than enough room for our code.
 
+
+```bash
+└─$ xxd /tmp/elf                  
+00000000: 7f45 4c46 0101 0100 c1e1 1083 c004 eb10  .ELF............
+00000010: 0200 0300 ffff ffff 5000 0100 2c00 0000  ........P...,...
+00000020: cd80 4b31 c040 ebf8 2c00 2000 0100 0000  ..K1.@..,. .....
+00000030: 5000 0000 5000 0100 ffff ffff 1000 0000  P...P...........
+00000040: 1000 00ba a400 0000 4143 ebbc 9090 9090  ........AC......
+00000050: ebf1 f1eb 9090 9090 bceb 4341 0000 00a4  ..........CA....
+00000060: ba00 0010 0000 0010 ffff ffff 0001 0050  ...............P
+00000070: 0000 0050 0000 0001 0020 002c f8eb 40c0  ...P..... .,..@.
+00000080: 314b 80cd 0000 002c 0001 0050 ffff ffff  1K.....,...P....
+00000090: 0003 0002 10eb 04c0 8310 e1c1 0001 0101  ................
+000000a0: 464c 457f                                FLE.
+```
+
+```bash
+└─$ xxd /tmp/elf32
+00000000: 7f45 4c46 41c1 e110 4383 c004 b27d eb10  .ELFA...C....}..
+00000010: 0200 0300 1000 0000 0400 0100 2c00 0000  ............,...
+00000020: cd80 4b31 c040 cd80 2c00 2000 0100 0000  ..K1.@..,. .....
+00000030: 5400 0000 5400 0100 0f0f 0f0f 0f0f 0f0f  T...T...........
+00000040: 0f0f 0f0f 0f00 0100 5400 0000 5400 0000  ........T...T...
+00000050: 0100 2000 2c80 cd40 c031 4b80 cd00 0000  .. .,..@.1K.....
+00000060: 2c00 0100 0400 0000 1000 0300 0210 eb7d  ,..............}
+00000070: b204 c083 4310 e1c1 4146 4c45 7f         ....C...AFLE.
+```
+
+
+```bash
+└─$ ../check.sh ./elf
+[+] First check passed: binary is a byte-wise palindrome.
+[+] Second check passed: binary is a true quine, its output matches itself.
+[+] Both checks passed: your binary is a very nice quinindrome!
+[+] Your score: 125
+```
+
+![second classement](./second.png "second classement")
+
+7 on 12, much better but i hope we could do more.
+
+
+### Header overlapping
+<br>
+
+Finally i think about a last but surelly the best way to optimize the size, overlap the headers.<br>
+As the Elf32_Ehdr->e_phoff points to the first program header, we can make it point inside the Elf32_Ehdr itself.<br>
+As These two headers need to be valid as well, there is not a lot of place where we can put the Elf32_Phdr, i choose to put it at offest 0x4.
+Finally we must adjust our code to go in new unused space, and also try to shrink as must as possible the mirror impact.
+
+
+```bash
+└─$ xxd /tmp/elf33
+00000000: 7f45 4c46 0100 0000 0000 0000 0000 0100  .ELF............
+00000010: 0200 0300 ff00 0000 2000 0100 0400 0000  ........ .......
+00000020: 4183 c004 b274 eb06 3400 2000 0100 43c1  A....t..4. ...C.
+00000030: e110 cd80 31c0 4b40 cd80 80cd 404b c031  ....1.K@....@K.1
+00000040: 80cd 10e1 c143 0001 0020 0034 06eb 74b2  .....C... .4..t.
+00000050: 04c0 8341 0000 0004 0001 0020 0000 00ff  ...A....... ....
+00000060: 0003 0002 0001 0000 0000 0000 0000 0001  ................
+00000070: 464c 457f                                FLE.
+```
+
+```bash
+└─$ xxd /tmp/elf34
+00000000: 7f45 4c46 0100 0000 0000 0000 0000 0100  .ELF............
+00000010: 0200 0300 ffff 0000 2000 0100 0400 0000  ........ .......
+00000020: b580 01c9 b004 eb06 2c00 2000 0100 43b2  ........,. ...C.
+00000030: 6fcd 804b b001 cd80 cd01 b04b 80cd 6fb2  o..K.......K..o.
+00000040: 4300 0100 2000 2c06 eb04 b0c9 0180 b500  C... .,.........
+00000050: 0000 0400 0100 2000 00ff ff00 0300 0200  ...... .........
+00000060: 0100 0000 0000 0000 0000 0146 4c45 7f    ...........FLE.
+```
+
+```bash
+└─$ ../check.sh ./elf
+[+] First check passed: binary is a byte-wise palindrome.
+[+] Second check passed: binary is a true quine, its output matches itself.
+[+] Both checks passed: your binary is a very nice quinindrome!
+[+] Your score: 111
+```
+
+![final classement](./final.png "final classement")
+
+A lot of new player finally join the callenge, I don't really see how i can do a better solution.
+I finally finish 14 over 25 and i'm press to see other solution.
+
+Thx.<br>
+Sk4r.

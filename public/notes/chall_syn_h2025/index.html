@@ -46,6 +46,7 @@
     <ul>
       <li class="nomarker"><h1 class="page__logo"><a href="https://sk4r-git.github.io/" class="page__logo-inner">Sk4r</a></h1></li>
     
+    
     </ul>
 </nav>
 
@@ -61,12 +62,12 @@ Synacktiv invite us to construct a binary following some rules, this binary must
         <li>print himself</li>
         <li>be size minimal</li>
     </ol>
-<p><strong>TL;DR;</strong></p>
-<div class="homepage-buttons">
-  Attachments:<br>
-  <a href="/notes/chall_syn_h2025/check.sh">check.sh</a>
-  <a href="/notes/chall_syn_h2025/elf3">ma solution</a>
-</div>
+<h2 id="tl-dr">TL; DR;</h2>
+<br>
+The binary must pass the check:<br>
+<a href="/notes/chall_syn_h2025/check.sh">check.sh</a><br>
+and mine is here:<br>
+<a href="/notes/chall_syn_h2025/elf">elf</a>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>└─$ xxd ../elf
 </span></span><span style="display:flex;"><span>00000000: 7f45 4c46 <span style="color:#ae81ff">0100</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0100</span>  .ELF............
 </span></span><span style="display:flex;"><span>00000010: <span style="color:#ae81ff">0200</span> <span style="color:#ae81ff">0300</span> ffff <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">2000</span> <span style="color:#ae81ff">0100</span> <span style="color:#ae81ff">0400</span> <span style="color:#ae81ff">0000</span>  ........ .......
@@ -75,49 +76,50 @@ Synacktiv invite us to construct a binary following some rules, this binary must
 </span></span><span style="display:flex;"><span>00000040: <span style="color:#ae81ff">4300</span> <span style="color:#ae81ff">0100</span> <span style="color:#ae81ff">2000</span> 2c06 eb04 b0c9 <span style="color:#ae81ff">0180</span> b500  C... .,.........
 </span></span><span style="display:flex;"><span>00000050: <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0400</span> <span style="color:#ae81ff">0100</span> <span style="color:#ae81ff">2000</span> 00ff ff00 <span style="color:#ae81ff">0300</span> <span style="color:#ae81ff">0200</span>  ...... .........
 </span></span><span style="display:flex;"><span>00000060: <span style="color:#ae81ff">0100</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0146</span> 4c45 7f    ...........FLE.
-</span></span></code></pre></div><p>Étonnant mais le ElfHeader contient sa propre taille, permettant ainsi de le tronquer tout en le laissant valide.
-On peut ainsi conserver uniquement</p>
+</span></span></code></pre></div><p>Surprisingly, the ElfHeader contains its own size, allowing it to be truncated while still remaining valid.<br>
+It also contains the address of the program header, allowing us to choose where to place it and thus overlap these two structures.<br></p>
+<p>This way, only these two header parts can be kept:</p>
 <ul>
-<li><code>Elf32_Ehdr</code> (offset 0x00 à 0x2c), jusqu’à e_phentsize</li>
-<li><code>Elf32_Phdr</code> (offset 0x04 à 0x20), avec p_align tronqué</li>
+<li><code>Elf32_Ehdr</code> (offset 0x00 à 0x2c), up to e_phentsize</li>
+<li><code>Elf32_Phdr</code> (offset 0x04 à 0x20), with only p_align truncated</li>
 </ul>
-<p>Les headers tronqués :</p>
+<p>truncated headers :</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C" data-lang="C"><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> e_ident[<span style="color:#ae81ff">16</span>];  
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint16_t</span>      e_type;    
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint16_t</span>      e_machine; 
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span>      e_version;  
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span>      e_entry;  <span style="color:#75715e">// Entry point à 0x18 = 0x00010020
-</span></span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span>      e_phoff;  <span style="color:#75715e">// Programme Header à 0x1c = 0x04
-</span></span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span>      e_shoff;    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span>      e_entry;  <span style="color:#75715e">// Entry point at 0x18 = 0x00010020
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">uint32_t</span>      e_phoff;  <span style="color:#75715e">// Program Header at 0x1c = 0x04
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">uint32_t</span>      e_shoff;    
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span>      e_flags; 
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint16_t</span>      e_ehsize; <span style="color:#75715e">// Taille du ELF Header
-</span></span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint16_t</span>      e_phentsize;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint16_t</span>      e_ehsize; <span style="color:#75715e">// Size of ELF Header
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">uint16_t</span>      e_phentsize;
 </span></span><span style="display:flex;"><span>} Elf32_Ehdr;
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_type; 
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_offset; 
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_vaddr;       <span style="color:#75715e">// Addresse de chargement à 0x0c = 0x00010000
-</span></span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_paddr;  
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_vaddr;       <span style="color:#75715e">// Load adress at 0x0c = 0x00010000
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">uint32_t</span> p_paddr;  
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_filesz; 
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_memsz;  
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_flags;  
 </span></span><span style="display:flex;"><span>} Elf32_Phdr;
-</span></span></code></pre></div><p>Après avoir imbriqué les headers l&rsquo;un dans l&rsquo;autre,
-Nous pouvons modifier les champs &lsquo;inutiles&rsquo; des headers en y insérant notre code.</p>
-<pre tabindex="0"><code>1) Le kernel parse le elf header
-2) Grace au elf header il sait où trouver le programme header, qu&#39;il parse 
-   aussi
-3) Si pas d&#39;erreur il charge le programme en 0x10000 comme spécifié par 
-   `Elf32_Phdr-&gt;p_vaddr` en 0x0c
-4) Regarde l&#39;entrypoint et execute la première instruction en 0x20
+</span></span></code></pre></div><p>After nesting the headers inside one another,
+we can modify the “unused” header fields by inserting our code into them.</p>
+<pre tabindex="0"><code>1) The kernel parses the ELF header
+2) Thanks to the ELF header, it knows where to find the program header,
+   which it also parses
+3) If there is no error, it loads the program at 0x10000 as specified by
+   `Elf32_Phdr-&gt;p_vaddr` at 0x0c
+4) It checks the entry point and executes the first instruction at 0x20
 5) b580 = mov $0x80, %ch     (ecx = 0x8000)
 6) 01c9 = add %ecx, %ecx     (ecx = 0x10000) 
 7) b004 = mov $0x4, %al      (eax = 4)    (write syscall)
 8) eb06 = jump + 6           (eip = 0x2e)
 9) 43 = inc %ebx             (ebx = 1)    (stdout)
-10) b26f = mov $0x6f, %dl    (edx = 0x6f) (taill du binaire)
+10) b26f = mov $0x6f, %dl    (edx = 0x6f) (binary size)
 11) cd80 = int $0x80         (syscall write(1, 0x10000, 0x6f))
 12) 4b = dec %ebx            (ebx = 0)
 13) b001 = mov $1, %al       (eax = 1)
@@ -129,18 +131,19 @@ Nous pouvons modifier les champs &lsquo;inutiles&rsquo; des headers en y inséra
 </span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Both checks passed: your binary is a very nice quinindrome!
 </span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Your score: <span style="color:#ae81ff">111</span>
 </span></span></code></pre></div><p><img src="./final.png" alt="classement final" title="classement final"></p>
-<p>Un grand merci à <a href="https://www.synacktiv.com"><strong>Synacktiv</strong></a> pour l&rsquo;organisation de ce challenge.
-Félicitations à tous les participants, et tout particulièrement à  <a href="https://github.com/fishilico"><strong>ioonag</strong></a> pour sa solution en 81 octets.</p>
+<p>Many thanks to <a href="https://www.synacktiv.com"><strong>Synacktiv</strong></a> for organizing this challenge.
+Congratulations to all the participants, and especially to <a href="https://github.com/fishilico"><strong>ioonag</strong></a> for their 81-byte solution.</p>
 <br>
-<p><strong>Explications</strong></p>
-<p>Naïvement, et pour un premier jet :</p>
+<h2 id="explanation">Explanation</h2>
+<h3 id="first-attempt">First attempt</h3>
+<br>
+Naively, for a first draft:
 <ul>
-<li>Pour le palindrome, il suffit de copier coller &rsquo;en mirroir&rsquo; son binaire -&gt; abcd -&gt; abcddcba</li>
-<li>Pour reduire la taille on va le coder en assembleur</li>
-<li>Et pour l&rsquo;auto-affichage eh bien nous allons le coder</li>
+<li>For the palindrome, we can simply copy and paste the binary in “mirror” form → abcd → abcddcba</li>
+<li>To reduce the size, we’ll write it in assembly</li>
+<li>And for the self-printing part, we’ll just implement it ourselves</li>
 </ul>
-<p>Avec tout de même deux choix préliminaires, PIE c&rsquo;est mieux pour savoir quoi afficher
-et en 32 bits ça va surement prendre moins de place</p>
+<p>With two preliminary choices nonetheless: PIE is better for knowing what to print, and using 32-bit will probably take less space.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-asm" data-lang="asm"><span style="display:flex;"><span><span style="color:#a6e22e">.text</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#a6e22e">.globl</span> <span style="color:#66d9ef">_start</span>
@@ -163,8 +166,8 @@ et en 32 bits ça va surement prendre moins de place</p>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(d)):
 </span></span><span style="display:flex;"><span>    r<span style="color:#f92672">.</span>write(d[<span style="color:#f92672">-</span>i<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>to_bytes())
 </span></span><span style="display:flex;"><span>r<span style="color:#f92672">.</span>close()
-</span></span></code></pre></div><p>Déjà, premier problème,
-Notre binaire est assez grand</p>
+</span></span></code></pre></div><p>Already, the first problem:
+our binary is quite large.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>00000000: 7f45 4c46 <span style="color:#ae81ff">0101</span> <span style="color:#ae81ff">0100</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span>  .ELF............
 </span></span><span style="display:flex;"><span>00000010: <span style="color:#ae81ff">0200</span> <span style="color:#ae81ff">0300</span> <span style="color:#ae81ff">0100</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0090</span> <span style="color:#ae81ff">0408</span> <span style="color:#ae81ff">3400</span> <span style="color:#ae81ff">0000</span>  ............4...
 </span></span><span style="display:flex;"><span>00000020: a810 <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">3400</span> <span style="color:#ae81ff">2000</span> <span style="color:#ae81ff">0200</span> <span style="color:#ae81ff">2800</span>  ........4. ...<span style="color:#f92672">(</span>.
@@ -178,8 +181,8 @@ Notre binaire est assez grand</p>
 </span></span><span style="display:flex;"><span>000022b0: <span style="color:#ae81ff">0028</span> <span style="color:#ae81ff">0002</span> <span style="color:#ae81ff">0020</span> <span style="color:#ae81ff">0034</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> 10a8  .<span style="color:#f92672">(</span>... .4........
 </span></span><span style="display:flex;"><span>000022c0: <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0034</span> <span style="color:#ae81ff">0804</span> <span style="color:#ae81ff">9000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0001</span> <span style="color:#ae81ff">0003</span> <span style="color:#ae81ff">0002</span>  ...4............
 </span></span><span style="display:flex;"><span>000022d0: <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0001</span> <span style="color:#ae81ff">0101</span> 464c 457f  ............FLE.
-</span></span></code></pre></div><p>Et avec beaucoup de données inutiles (la moitié au moins)
-Donc le kernel ne s&rsquo;embête pas à tout charger:</p>
+</span></span></code></pre></div><p>And it contains a lot of unnecessary data (at least half of it).
+So the kernel doesn’t bother loading everything:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#f92672">(</span>gdb<span style="color:#f92672">)</span> b *0
 </span></span><span style="display:flex;"><span>Breakpoint <span style="color:#ae81ff">1</span> at 0x0
 </span></span><span style="display:flex;"><span><span style="color:#f92672">(</span>gdb<span style="color:#f92672">)</span> r
@@ -198,49 +201,52 @@ Donc le kernel ne s&rsquo;embête pas à tout charger:</p>
 </span></span><span style="display:flex;"><span>0xf7ffa000 0xf7ffc000 0x2000     0x0        r--p  <span style="color:#f92672">[</span>vvar_vclock<span style="color:#f92672">]</span> 
 </span></span><span style="display:flex;"><span>0xf7ffc000 0xf7ffe000 0x2000     0x0        r-xp  <span style="color:#f92672">[</span>vdso<span style="color:#f92672">]</span> 
 </span></span><span style="display:flex;"><span>0xfffdc000 0xffffe000 0x22000    0x0        rwxp  <span style="color:#f92672">[</span>stack<span style="color:#f92672">]</span> 
-</span></span></code></pre></div><p>Tout n&rsquo;est pas chargé -&gt; tout n&rsquo;est pas printable
-C&rsquo;est mort pour cette solution.</p>
-<p>Nous allons donc directement modifier les structures.</p>
+</span></span></code></pre></div><p>Not everything is loaded → not everything is printable.
+So this solution is dead.</p>
+<h3 id="second-attempt">Second attempt</h3>
+<br>
+We’ll therefore directly modify the structures:
 <ul>
-<li>structure binaire craft à la main</li>
-<li>payload de code rajouté artificiellement</li>
-<li>et toujours un copié-collé mirroir pour la règle du palindrome</li>
+<li>handcrafted binary structure</li>
+<li>code payload artificially added</li>
+<li>and still a mirrored copy-paste for the palindrome rule</li>
 </ul>
-<p>un Elf se base sur deux principales structures pour fonctionner
-(j&rsquo;attends les WU des autres mais je n&rsquo;ai pas réussi à le faire marcher sans ces deux là)</p>
+<p>An ELF relies on two main structures to function
+(I’m waiting for other write-ups, but I couldn’t get it working without these two).</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C" data-lang="C"><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> e_ident[<span style="color:#ae81ff">16</span>]; <span style="color:#75715e">/* Identification ELF */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint16_t</span>      e_type;      <span style="color:#75715e">/* Type de fichier (REL, EXEC, DYN…) */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint16_t</span>      e_machine;   <span style="color:#75715e">/* Architecture cible (e.g. EM_386) */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span>      e_version;   <span style="color:#75715e">/* Version ELF */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span>      e_entry;     <span style="color:#75715e">/* Adresse du point d&#39;entrée */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span>      e_phoff;     <span style="color:#75715e">/* Offset de la table des en-têtes de segments (program header) */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span>      e_shoff;     <span style="color:#75715e">/* Offset de la table des en-têtes de sections (section header) */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span>      e_flags;     <span style="color:#75715e">/* Flags spécifiques à l’architecture */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint16_t</span>      e_ehsize;    <span style="color:#75715e">/* Taille de cet en-tête ELF */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint16_t</span>      e_phentsize; <span style="color:#75715e">/* Taille d’une entrée de la table des segments */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint16_t</span>      e_phnum;     <span style="color:#75715e">/* Nombre d’entrées dans la table des segments */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint16_t</span>      e_shentsize; <span style="color:#75715e">/* Taille d’une entrée de la table des sections */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint16_t</span>      e_shnum;     <span style="color:#75715e">/* Nombre d’entrées dans la table des sections */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint16_t</span>      e_shstrndx;  <span style="color:#75715e">/* Index de la section contenant les noms de sections */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> e_ident[<span style="color:#ae81ff">16</span>]; <span style="color:#75715e">/* ELF identification */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint16_t</span>      e_type;      <span style="color:#75715e">/* File type (REL, EXEC, DYN…) */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint16_t</span>      e_machine;   <span style="color:#75715e">/* Target architecture (e.g. EM_386) */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span>      e_version;   <span style="color:#75715e">/* ELF version */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span>      e_entry;     <span style="color:#75715e">/* Entry point address */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span>      e_phoff;     <span style="color:#75715e">/* Offset of the program header table */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span>      e_shoff;     <span style="color:#75715e">/* Offset of the section header table */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span>      e_flags;     <span style="color:#75715e">/* Architecture-specific flags */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint16_t</span>      e_ehsize;    <span style="color:#75715e">/* Size of this ELF header */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint16_t</span>      e_phentsize; <span style="color:#75715e">/* Size of one program header entry */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint16_t</span>      e_phnum;     <span style="color:#75715e">/* Number of entries in the program header table */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint16_t</span>      e_shentsize; <span style="color:#75715e">/* Size of one section header entry */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint16_t</span>      e_shnum;     <span style="color:#75715e">/* Number of entries in the section header table */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint16_t</span>      e_shstrndx;  <span style="color:#75715e">/* Index of the section containing section names */</span>
 </span></span><span style="display:flex;"><span>} Elf32_Ehdr;
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_type;   <span style="color:#75715e">/* Type du segment (LOAD, DYNAMIC, INTERP, NOTE, etc.) */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_offset; <span style="color:#75715e">/* Offset du segment dans le fichier */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_vaddr;  <span style="color:#75715e">/* Adresse virtuelle où le segment doit être chargé */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_paddr;  <span style="color:#75715e">/* Adresse physique (souvent ignorée) */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_filesz; <span style="color:#75715e">/* Taille du segment dans le fichier */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_memsz;  <span style="color:#75715e">/* Taille du segment en mémoire après chargement */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_flags;  <span style="color:#75715e">/* Permissions du segment (R, W, X) */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_align;  <span style="color:#75715e">/* Alignement requis du segment */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_type;   <span style="color:#75715e">/* Segment type (LOAD, DYNAMIC, INTERP, NOTE, etc.) */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_offset; <span style="color:#75715e">/* Segment offset in the file */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_vaddr;  <span style="color:#75715e">/* Virtual address where the segment must be loaded */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_paddr;  <span style="color:#75715e">/* Physical address (often ignored) */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_filesz; <span style="color:#75715e">/* Segment size in the file */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_memsz;  <span style="color:#75715e">/* Segment size in memory after loading */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_flags;  <span style="color:#75715e">/* Segment permissions (R, W, X) */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p_align;  <span style="color:#75715e">/* Required segment alignment */</span>
 </span></span><span style="display:flex;"><span>} Elf32_Phdr;
 </span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x90</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">12</span> 
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># shellcode sans optimisation</span>
-</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\xb9\x00\x80\x04\x08\x43\xba\xec\x00\x00\x00\x83\xc0\x04\xcd\x80\x4b\x31\xc0\x40\xcd\x80</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x90</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">12</span> <span style="color:#75715e"># for alignment</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># non-optimized shellcode</span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\xb9\x00\x80\x04\x08\x43\xba\xec\x00\x00\x00</span><span style="color:#e6db74">&#34;</span> 
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x83\xc0\x04\xcd\x80\x4b\x31\xc0\x40\xcd\x80</span><span style="color:#e6db74">&#34;</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>SIZE <span style="color:#f92672">=</span> len(payload)
 </span></span><span style="display:flex;"><span>
@@ -321,14 +327,13 @@ C&rsquo;est mort pour cette solution.</p>
 </span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Second check passed: binary is a true quine, its output matches itself.
 </span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Both checks passed: your binary is a very nice quinindrome!
 </span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Your score: <span style="color:#ae81ff">236</span>
-</span></span></code></pre></div><p>parfait on a un premier binaire qui marche</p>
-<p>plutôt content
-&hellip;
-&hellip;
-<img src="./first.png" alt="premier classement" title="premier classement">
-plutôt pas content</p>
-<p>Bon va falloir faire mieux</p>
-<p>notre binaire ressemble à ça:</p>
+</span></span></code></pre></div><p>Perfect, we get our first working binary.<br>
+but <br>
+&hellip;<br>
+&hellip;</p>
+<p><img src="./first.png" alt="premier classement" title="premier classement"></p>
+<p>10 on 12, not really good.</p>
+<p>Our binary actually looks like that:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>└─$ xxd elf
 </span></span><span style="display:flex;"><span>00000000: 7f45 4c46 <span style="color:#ae81ff">0101</span> <span style="color:#ae81ff">0100</span> ffff ffff ffff ffff  .ELF............
 </span></span><span style="display:flex;"><span>00000010: <span style="color:#ae81ff">0200</span> <span style="color:#ae81ff">0300</span> ffff ffff <span style="color:#ae81ff">6080</span> <span style="color:#ae81ff">0408</span> <span style="color:#ae81ff">3400</span> <span style="color:#ae81ff">0000</span>  ........<span style="color:#e6db74">`</span>...4...
@@ -345,8 +350,71 @@ plutôt pas content</p>
 </span></span><span style="display:flex;"><span>000000c0: <span style="color:#ae81ff">0020</span> <span style="color:#ae81ff">0034</span> ffff ffff ffff ffff <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0034</span>  . .4...........4
 </span></span><span style="display:flex;"><span>000000d0: <span style="color:#ae81ff">0804</span> <span style="color:#ae81ff">8060</span> ffff ffff <span style="color:#ae81ff">0003</span> <span style="color:#ae81ff">0002</span> ffff ffff  ...<span style="color:#e6db74">`</span>............
 </span></span><span style="display:flex;"><span>000000e0: ffff ffff <span style="color:#ae81ff">0001</span> <span style="color:#ae81ff">0101</span> 464c 457f            ........FLE.
-</span></span></code></pre></div><p>les \x90 prennent beaucoup de place, et notre code aussi finalement,
-la première optimisation a laquelle j&rsquo;ai pensé a été de mettre le code directement dans les headers car il y a pleins d&rsquo;endroits qui ne servent à rien. En changeant l&rsquo;entrypoint et en jumpant de zone inutiles en zones inutiles il y a largement la place pour nore code</p>
+</span></span></code></pre></div><h3 id="first-optimization">First optimization</h3>
+<br>
+The \x90 bytes take up a lot of space, and our code does too in the end.
+The first optimization I thought of was to put the code directly into the headers, since there are plenty of places that aren’t used. By changing the entry point and jumping from unused areas to other unused areas, there’s more than enough room for our code.
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>└─$ xxd /tmp/elf                  
+</span></span><span style="display:flex;"><span>00000000: 7f45 4c46 <span style="color:#ae81ff">0101</span> <span style="color:#ae81ff">0100</span> c1e1 <span style="color:#ae81ff">1083</span> c004 eb10  .ELF............
+</span></span><span style="display:flex;"><span>00000010: <span style="color:#ae81ff">0200</span> <span style="color:#ae81ff">0300</span> ffff ffff <span style="color:#ae81ff">5000</span> <span style="color:#ae81ff">0100</span> 2c00 <span style="color:#ae81ff">0000</span>  ........P...,...
+</span></span><span style="display:flex;"><span>00000020: cd80 4b31 c040 ebf8 2c00 <span style="color:#ae81ff">2000</span> <span style="color:#ae81ff">0100</span> <span style="color:#ae81ff">0000</span>  ..K1.@..,. .....
+</span></span><span style="display:flex;"><span>00000030: <span style="color:#ae81ff">5000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">5000</span> <span style="color:#ae81ff">0100</span> ffff ffff <span style="color:#ae81ff">1000</span> <span style="color:#ae81ff">0000</span>  P...P...........
+</span></span><span style="display:flex;"><span>00000040: <span style="color:#ae81ff">1000</span> 00ba a400 <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">4143</span> ebbc <span style="color:#ae81ff">9090</span> <span style="color:#ae81ff">9090</span>  ........AC......
+</span></span><span style="display:flex;"><span>00000050: ebf1 f1eb <span style="color:#ae81ff">9090</span> <span style="color:#ae81ff">9090</span> bceb <span style="color:#ae81ff">4341</span> <span style="color:#ae81ff">0000</span> 00a4  ..........CA....
+</span></span><span style="display:flex;"><span>00000060: ba00 <span style="color:#ae81ff">0010</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0010</span> ffff ffff <span style="color:#ae81ff">0001</span> <span style="color:#ae81ff">0050</span>  ...............P
+</span></span><span style="display:flex;"><span>00000070: <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0050</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0001</span> <span style="color:#ae81ff">0020</span> 002c f8eb 40c0  ...P..... .,..@.
+</span></span><span style="display:flex;"><span>00000080: 314b 80cd <span style="color:#ae81ff">0000</span> 002c <span style="color:#ae81ff">0001</span> <span style="color:#ae81ff">0050</span> ffff ffff  1K.....,...P....
+</span></span><span style="display:flex;"><span>00000090: <span style="color:#ae81ff">0003</span> <span style="color:#ae81ff">0002</span> 10eb 04c0 <span style="color:#ae81ff">8310</span> e1c1 <span style="color:#ae81ff">0001</span> <span style="color:#ae81ff">0101</span>  ................
+</span></span><span style="display:flex;"><span>000000a0: 464c 457f                                FLE.
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>└─$ xxd /tmp/elf32
+</span></span><span style="display:flex;"><span>00000000: 7f45 4c46 41c1 e110 <span style="color:#ae81ff">4383</span> c004 b27d eb10  .ELFA...C....<span style="color:#f92672">}</span>..
+</span></span><span style="display:flex;"><span>00000010: <span style="color:#ae81ff">0200</span> <span style="color:#ae81ff">0300</span> <span style="color:#ae81ff">1000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0400</span> <span style="color:#ae81ff">0100</span> 2c00 <span style="color:#ae81ff">0000</span>  ............,...
+</span></span><span style="display:flex;"><span>00000020: cd80 4b31 c040 cd80 2c00 <span style="color:#ae81ff">2000</span> <span style="color:#ae81ff">0100</span> <span style="color:#ae81ff">0000</span>  ..K1.@..,. .....
+</span></span><span style="display:flex;"><span>00000030: <span style="color:#ae81ff">5400</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">5400</span> <span style="color:#ae81ff">0100</span> 0f0f 0f0f 0f0f 0f0f  T...T...........
+</span></span><span style="display:flex;"><span>00000040: 0f0f 0f0f 0f00 <span style="color:#ae81ff">0100</span> <span style="color:#ae81ff">5400</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">5400</span> <span style="color:#ae81ff">0000</span>  ........T...T...
+</span></span><span style="display:flex;"><span>00000050: <span style="color:#ae81ff">0100</span> <span style="color:#ae81ff">2000</span> 2c80 cd40 c031 4b80 cd00 <span style="color:#ae81ff">0000</span>  .. .,..@.1K.....
+</span></span><span style="display:flex;"><span>00000060: 2c00 <span style="color:#ae81ff">0100</span> <span style="color:#ae81ff">0400</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">1000</span> <span style="color:#ae81ff">0300</span> <span style="color:#ae81ff">0210</span> eb7d  ,..............<span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>00000070: b204 c083 <span style="color:#ae81ff">4310</span> e1c1 <span style="color:#ae81ff">4146</span> 4c45 7f         ....C...AFLE.
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>└─$ ../check.sh ./elf
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> First check passed: binary is a byte-wise palindrome.
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Second check passed: binary is a true quine, its output matches itself.
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Both checks passed: your binary is a very nice quinindrome!
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Your score: <span style="color:#ae81ff">125</span>
+</span></span></code></pre></div><p><img src="./second.png" alt="second classement" title="second classement"></p>
+<p>7 on 12, much better but i hope we could do more.</p>
+<h3 id="header-overlapping">Header overlapping</h3>
+<br>
+<p>Finally i think about a last but surelly the best way to optimize the size, overlap the headers.<br>
+As the Elf32_Ehdr-&gt;e_phoff points to the first program header, we can make it point inside the Elf32_Ehdr itself.<br>
+As These two headers need to be valid as well, there is not a lot of place where we can put the Elf32_Phdr, i choose to put it at offest 0x4.
+Finally we must adjust our code to go in new unused space, and also try to shrink as must as possible the mirror impact.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>└─$ xxd /tmp/elf33
+</span></span><span style="display:flex;"><span>00000000: 7f45 4c46 <span style="color:#ae81ff">0100</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0100</span>  .ELF............
+</span></span><span style="display:flex;"><span>00000010: <span style="color:#ae81ff">0200</span> <span style="color:#ae81ff">0300</span> ff00 <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">2000</span> <span style="color:#ae81ff">0100</span> <span style="color:#ae81ff">0400</span> <span style="color:#ae81ff">0000</span>  ........ .......
+</span></span><span style="display:flex;"><span>00000020: <span style="color:#ae81ff">4183</span> c004 b274 eb06 <span style="color:#ae81ff">3400</span> <span style="color:#ae81ff">2000</span> <span style="color:#ae81ff">0100</span> 43c1  A....t..4. ...C.
+</span></span><span style="display:flex;"><span>00000030: e110 cd80 31c0 4b40 cd80 80cd 404b c031  ....1.K@....@K.1
+</span></span><span style="display:flex;"><span>00000040: 80cd 10e1 c143 <span style="color:#ae81ff">0001</span> <span style="color:#ae81ff">0020</span> <span style="color:#ae81ff">0034</span> 06eb 74b2  .....C... .4..t.
+</span></span><span style="display:flex;"><span>00000050: 04c0 <span style="color:#ae81ff">8341</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0004</span> <span style="color:#ae81ff">0001</span> <span style="color:#ae81ff">0020</span> <span style="color:#ae81ff">0000</span> 00ff  ...A....... ....
+</span></span><span style="display:flex;"><span>00000060: <span style="color:#ae81ff">0003</span> <span style="color:#ae81ff">0002</span> <span style="color:#ae81ff">0001</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0001</span>  ................
+</span></span><span style="display:flex;"><span>00000070: 464c 457f                                FLE.
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>└─$ xxd /tmp/elf34
+</span></span><span style="display:flex;"><span>00000000: 7f45 4c46 <span style="color:#ae81ff">0100</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0100</span>  .ELF............
+</span></span><span style="display:flex;"><span>00000010: <span style="color:#ae81ff">0200</span> <span style="color:#ae81ff">0300</span> ffff <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">2000</span> <span style="color:#ae81ff">0100</span> <span style="color:#ae81ff">0400</span> <span style="color:#ae81ff">0000</span>  ........ .......
+</span></span><span style="display:flex;"><span>00000020: b580 01c9 b004 eb06 2c00 <span style="color:#ae81ff">2000</span> <span style="color:#ae81ff">0100</span> 43b2  ........,. ...C.
+</span></span><span style="display:flex;"><span>00000030: 6fcd 804b b001 cd80 cd01 b04b 80cd 6fb2  o..K.......K..o.
+</span></span><span style="display:flex;"><span>00000040: <span style="color:#ae81ff">4300</span> <span style="color:#ae81ff">0100</span> <span style="color:#ae81ff">2000</span> 2c06 eb04 b0c9 <span style="color:#ae81ff">0180</span> b500  C... .,.........
+</span></span><span style="display:flex;"><span>00000050: <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0400</span> <span style="color:#ae81ff">0100</span> <span style="color:#ae81ff">2000</span> 00ff ff00 <span style="color:#ae81ff">0300</span> <span style="color:#ae81ff">0200</span>  ...... .........
+</span></span><span style="display:flex;"><span>00000060: <span style="color:#ae81ff">0100</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0146</span> 4c45 7f    ...........FLE.
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>└─$ ../check.sh ./elf
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> First check passed: binary is a byte-wise palindrome.
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Second check passed: binary is a true quine, its output matches itself.
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Both checks passed: your binary is a very nice quinindrome!
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Your score: <span style="color:#ae81ff">111</span>
+</span></span></code></pre></div><p><img src="./final.png" alt="final classement" title="final classement"></p>
+<p>A lot of new player finally join the callenge, I don&rsquo;t really see how i can do a better solution.
+I finally finish 14 over 25 and i&rsquo;m press to see other solution.</p>
+<p>Thx.<br>
+Sk4r.</p>
 
 
     <ul>
@@ -369,7 +437,19 @@ la première optimisation a laquelle j&rsquo;ai pensé a été de mettre le code
 
             </div>
             <div class="aside__toc">
-                <nav id="TableOfContents"></nav>
+                <nav id="TableOfContents">
+  <ol>
+    <li><a href="#tl-dr">TL; DR;</a></li>
+    <li><a href="#explanation">Explanation</a>
+      <ol>
+        <li><a href="#first-attempt">First attempt</a></li>
+        <li><a href="#second-attempt">Second attempt</a></li>
+        <li><a href="#first-optimization">First optimization</a></li>
+        <li><a href="#header-overlapping">Header overlapping</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
             </div>
         </section>
 
