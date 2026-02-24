@@ -359,7 +359,7 @@ io.interactive()
 2. Write log
 3. Read log
 4. Exit
-> Index: Log: RUSEC{xxxxxxxxxxxxxxxxxxxxx}
+> Index: Log: FLAG{REDACTED}
 ```
 
 Thx.

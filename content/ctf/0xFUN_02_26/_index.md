@@ -267,7 +267,7 @@ $ ls
 chall
 flag.txt
 $ cat flag.txt
-0xfun{p4cm4n_Syu_br0k3_my_xpl0it_btW}
+FLAG{REDACTED}
 ```
 <!-------------------------------------------------------------------------------------->
 
@@ -328,7 +328,7 @@ io.interactive()
 $ ls
 config.txt  flag.txt  food_dir  vuln
 $ cat flag.txt
-0xfun{REDACTED}
+FLAG{REDACTED}
 ```
 
 <!-------------------------------------------------------------------------------------->
@@ -385,7 +385,7 @@ sla(b"GOT", str(win).encode())
 [+] Opening connection to chall.0xfun.org on port 25590: Done
 [*] Switching to interactive mode
 ! I want to see what you GOT!
-I like what you GOT! Take this: 0xfun{REDACTED}
+I like what you GOT! Take this: FLAG{REDACTED}
 ```
 
 Thx. 

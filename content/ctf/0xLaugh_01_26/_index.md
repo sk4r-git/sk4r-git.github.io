@@ -205,7 +205,7 @@ print(b"0x" + res)
 [+] Opening connection to 159.89.106.147 on port 1337: Done
 [+] Receiving all data: Done (2.16KB)
 [*] Closed connection to 159.89.106.147 port 1337
-b"0xL4ugh{xxxxxxxxxxxxxxxxxxxxxxxx}\n\x00\x00\x00\x00\x00\x00\x00"
+b"FLAG{REDACTED}"
 ```
 
 Thx. 

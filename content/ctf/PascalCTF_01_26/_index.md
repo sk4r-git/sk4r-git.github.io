@@ -390,7 +390,7 @@ io.interactive()
 [*] Switching to interactive mode
 
 > I see you know your way around this stuff, here\'s a flag!
-aaaaaaaaaaaaaaaaaaaaaaa
+FLAG{REDACTED}
 1. Create Player
 2. Delete Player
 3. Print Players
