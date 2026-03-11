@@ -18,6 +18,11 @@ tag = ""
 
 [menu]
 
+  [[menu.sidebar]]
+  name = "EHAX 02/26"
+  url = "/ctf/EHAX_02_26/"
+  parent = "CTF"
+  weight = 5
 
   [[menu.sidebar]]
   name = "OxFun 02/26"

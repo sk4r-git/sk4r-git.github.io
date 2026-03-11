@@ -4,6 +4,9 @@ draft = false
 title = "CTF Write-Up's"
 +++
 
+<div style="border:1px solid #ff0000; padding:15px; margin:20px 0; border-radius:8px;" class=0xfun_02_26>
+    <a href="/ctf/EHAX_02_26/">EHAX CTF, 02/2026</a><br>
+</div>
 
 <div style="border:1px solid #ff0000; padding:15px; margin:20px 0; border-radius:8px;" class=0xfun_02_26>
     <a href="/ctf/0xfun_02_26/">0xFun CTF, 02/2026</a><br>
