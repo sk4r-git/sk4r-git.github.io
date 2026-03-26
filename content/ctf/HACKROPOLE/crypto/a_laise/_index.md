@@ -82,12 +82,7 @@ for i in range(len(msg)):
 
 print(new_msg)
 ```
-It's much better:
 
-```bash
-└─$ /bin/python /home/sk4r/GITHUB/HACKROPOLE/cry/a_laise/solve.py
-b'HELLO DEAR AGENT! YOUR NEXT MISSION, IF YOU ACCEPT IT OF COURSE, WILL BE TO INFILTRATE THE UNDERGROUND NETWORK WHERE OUR ENEMIES ARE HIDING. SEE YOU IN NANTES ON APRIL 29TH FOR THE BEGINNING OF YOUR MISSION.'
-```
 
 Thx.
 

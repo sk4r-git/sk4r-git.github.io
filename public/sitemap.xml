@@ -2,6 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://sk4r-git.github.io/ctf/hackropole/crypto/crayon_cochon/</loc>
+    <lastmod>2026-03-26T20:01:07+01:00</lastmod>
+  </url><url>
+    <loc>https://sk4r-git.github.io/ctf/hackropole/crypto/clair_connu/</loc>
+    <lastmod>2026-03-26T19:23:15+01:00</lastmod>
+  </url><url>
+    <loc>https://sk4r-git.github.io/ctf/hackropole/crypto/carotte-radis-tomate/</loc>
+    <lastmod>2026-03-26T18:59:16+01:00</lastmod>
+  </url><url>
+    <loc>https://sk4r-git.github.io/ctf/hackropole/crypto/adversarial_crypto_infant/</loc>
+    <lastmod>2026-03-26T18:14:14+01:00</lastmod>
+  </url><url>
     <loc>https://sk4r-git.github.io/ctf/hackropole/pwn/byo_ecsc_team/</loc>
     <lastmod>2026-03-26T17:46:27+01:00</lastmod>
   </url><url>
