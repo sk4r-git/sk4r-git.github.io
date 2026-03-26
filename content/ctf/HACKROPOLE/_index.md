@@ -10,6 +10,6 @@ Challenges are available on the ANSSI platform
 
 https://hackropole.fr
 
-<a href="/ctf/hackropole/pwn/">pwn</a><br>
+<!-- <a href="/ctf/hackropole/pwn/">pwn</a><br>
 <a href="/ctf/hackropole/reverse/">reverse</a><br>
-<a href="/ctf/hackropole/crypto/">crypto</a><br>
+<a href="/ctf/hackropole/crypto/">crypto</a><br> -->
