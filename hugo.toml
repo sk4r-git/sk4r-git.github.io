@@ -19,6 +19,12 @@ tag = ""
 [menu]
 
   [[menu.sidebar]]
+  name = "HACKROPOLE"
+  url = "/ctf/HACKROPOLE/"
+  parent = "CTF"
+  weight = 6
+
+  [[menu.sidebar]]
   name = "EHAX 02/26"
   url = "/ctf/EHAX_02_26/"
   parent = "CTF"
@@ -48,6 +54,13 @@ tag = ""
   url = "/ctf/scarletctf_01_26/"
   parent = "CTF"
   weight = 1
+
+  [[menu.sidebar]]
+  name = "A day in Kernel hacking"
+  url = "/notes/kernel/"
+  parent = "Notes"
+  weight = 2
+
 
   [[menu.sidebar]]
   name = "Chall Synacktiv 12/25"

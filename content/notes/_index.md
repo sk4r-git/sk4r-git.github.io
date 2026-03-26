@@ -15,3 +15,9 @@ Synacktiv invite us to construct a binary following some rules, this binary must
     <li>be size minimal</li>
 </div>
 
+
+<div style="border:1px solid #ff0000; padding:15px; margin:20px 0; border-radius:8px;" class=Kernel>
+  <a href="/notes/kernel">A day in kernel hacking</a><br>
+Let's learn kernel hacking through the four challenges available in the hackropole platform
+</div>
+

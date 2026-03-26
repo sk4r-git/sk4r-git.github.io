@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head><title>A day in Kernel hacking &ndash; Sk4r</title>
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8"/>
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css" integrity="sha512-IW0nhlW5MgNydsXJO40En2EoCkTTjZhI3yuODrZIc8cQ4h1XcF53PsqDHa09NqnkXuIe0Oiyyj171BqZFwISBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+<link rel="stylesheet" href="https://sk4r-git.github.io/css/palettes/base16-dark.css">
+<link rel="stylesheet" href="https://sk4r-git.github.io/css/risotto.css">
+<link rel="stylesheet" href="https://sk4r-git.github.io/css/custom.css">
+
+
+
+
+
+
+
+
+
+<link rel="alternate" type="application/rss+xml" href="https://sk4r-git.github.io/notes/kernel/index.xml" title="Sk4r">
+
+
+
+<meta property="og:title" content="A day in Kernel hacking &ndash; Sk4r" />
+<meta property="og:url" content="https://sk4r-git.github.io/notes/kernel/" />
+
+  
+
+<meta property="og:locale" content="fr-fr" />
+</head>
+
+<body>
+    <div class="page">
+
+        <header class="page__header"><nav class="page__nav main-nav">
+    <ul>
+      <li class="nomarker"><h1 class="page__logo"><a href="https://sk4r-git.github.io/" class="page__logo-inner">Sk4r</a></h1></li>
+    
+    
+    </ul>
+</nav>
+
+</header>
+
+        <section class="page__body">
+    <h1 id="a-day-in-kernel-hacking">A day in Kernel hacking</h1>
+
+    <h2 id="setup">Setup</h2>
+<p>Befor diving in kernel hacking we must understand</p>
+<ul>
+<li>what are the files that are generally provided</li>
+<li>how to setup a reliable debug platform</li>
+<li>and what is our goal.</li>
+</ul>
+<h3 id="files">Files</h3>
+<ul>
+<li>bzImage</li>
+<li>iniramfs.xxx</li>
+<li>chall.ko</li>
+</ul>
+<h4 id="challko">chall.ko</h4>
+<p>It&rsquo;s the module which is launched in the kernel, necessarly vulnerable if it&rsquo;s a challenge</p>
+<p>As a module it exposed differents endpoints with are trigerrable through IOCTL&rsquo;s it&rsquo;s like syscalls, just specific to a driver.
+<strong>exemple d&rsquo;ioctl</strong>
+Or hooked function that we can trigger through normal system working</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ffffffffc03162c8 b ref_sys_getdents64	<span style="color:#f92672">[</span>ecsc<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>ffffffffc03162d0 b ref_sys_getdents	<span style="color:#f92672">[</span>ecsc<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>ffffffffc03162c0 b ref_sys_lstat	<span style="color:#f92672">[</span>ecsc<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>ffffffffc03162e0 b my_sys_call_table	<span style="color:#f92672">[</span>ecsc<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>ffffffffc03162d8 b original_cr0	<span style="color:#f92672">[</span>ecsc<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>ffffffffc031436e t ecsc_end	<span style="color:#f92672">[</span>ecsc<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>ffffffffc0316000 d __this_module	<span style="color:#f92672">[</span>ecsc<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>ffffffffc0314150 t ecsc_sys_getdents	<span style="color:#f92672">[</span>ecsc<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>ffffffffc031436e t cleanup_module	<span style="color:#f92672">[</span>ecsc<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>ffffffffc03142a0 t ecsc_sys_lstat	<span style="color:#f92672">[</span>ecsc<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>ffffffffc0314000 t ecsc_sys_getdents64	<span style="color:#f92672">[</span>ecsc<span style="color:#f92672">]</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>c8821000 t tostring_close	<span style="color:#f92672">[</span>basic1_ch1<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>c8821020 t tostring_open	<span style="color:#f92672">[</span>basic1_ch1<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>c8821040 t tostring_read	<span style="color:#f92672">[</span>basic1_ch1<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>c8821080 t tostring_read_dec	<span style="color:#f92672">[</span>basic1_ch1<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>c88210e0 t tostring_read_hexa	<span style="color:#f92672">[</span>basic1_ch1<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>c8821140 t tostring_write	<span style="color:#f92672">[</span>basic1_ch1<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>c88211fc t tostring_exit	<span style="color:#f92672">[</span>basic1_ch1<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>c88211fc t cleanup_module	<span style="color:#f92672">[</span>basic1_ch1<span style="color:#f92672">]</span>
+</span></span></code></pre></div><h4 id="bzimage">bzImage</h4>
+<p>This is the kernel that we will work with</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>└─$ file bzImage 
+</span></span><span style="display:flex;"><span>bzImage: Linux kernel x86 boot executable, bzImage, version 4.14.167 <span style="color:#f92672">(</span>root@vps783610<span style="color:#f92672">)</span> <span style="color:#75715e">#11 Fri Feb 14 16:47:58 CET 2020, RO-rootFS, Normal VGA, setup size 512*30, syssize 0x2821d, jump 0x268 0x8cd88ec0fc8cd239 instruction, protocol 2.13, from protected-mode code at offset 0x276 0x2540eb bytes gzip compressed, relocatable, legacy 64-bit entry point, can be above 4G, max cmdline size 2047, init_size 0xd89000</span>
+</span></span></code></pre></div><h4 id="iniramfs">iniramfs</h4>
+<p>The iniramfs is generaly a cpio archive, this is the base file system that will be used by the kernel</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>└─$ file initramfs.example.cpio 
+</span></span><span style="display:flex;"><span>initramfs.example.cpio: ASCII cpio archive <span style="color:#f92672">(</span>SVR4 with no CRC<span style="color:#f92672">)</span>
+</span></span></code></pre></div><h3 id="debug">Debug</h3>
+<h4 id="what-is-launched-">What is launched ?</h4>
+<p>The cpio archive (initramfs) can be extracted in order to retrieve the file system that will be used</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cpio -idv &lt; ./initramfs
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>rootf
+</span></span><span style="display:flex;"><span>├── bin
+</span></span><span style="display:flex;"><span>│   ├── <span style="color:#f92672">[</span>
+</span></span><span style="display:flex;"><span>│   ├── <span style="color:#f92672">[[</span>
+</span></span><span style="display:flex;"><span>│   ├── acpid
+</span></span><span style="display:flex;"><span>│   ├── add-shell
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>│   ├── zcat
+</span></span><span style="display:flex;"><span>│   └── zcip
+</span></span><span style="display:flex;"><span>├── etc
+</span></span><span style="display:flex;"><span>│   ├── group
+</span></span><span style="display:flex;"><span>│   └── passwd
+</span></span><span style="display:flex;"><span>├── home
+</span></span><span style="display:flex;"><span>│   └── ctf
+</span></span><span style="display:flex;"><span>├── init
+</span></span><span style="display:flex;"><span>└── lib
+</span></span><span style="display:flex;"><span>    └── modules
+</span></span><span style="display:flex;"><span>        └── 4.14.167
+</span></span><span style="display:flex;"><span>            └── ecsc.ko
+</span></span></code></pre></div><p>The most important file is the &lsquo;init&rsquo; one, this is the first userland executable that will be run by the kernel. Some interesting information about how to interact with the VM that we will launch can be found in.</p>
+<p>We finally launch the kernel via qemu.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>qemu-system-x86_64 <span style="color:#ae81ff">\ </span> 
+</span></span><span style="display:flex;"><span>-m 128M <span style="color:#ae81ff">\ </span> 
+</span></span><span style="display:flex;"><span>-kernel bzImage <span style="color:#ae81ff">\ </span> 
+</span></span><span style="display:flex;"><span>-initrd initramfs.example.cpio <span style="color:#ae81ff">\ </span> 
+</span></span><span style="display:flex;"><span>-append <span style="color:#e6db74">&#34;console=ttyS0 panic=1 oops=panic quiet&#34;</span> <span style="color:#ae81ff">\ </span> 
+</span></span><span style="display:flex;"><span>-nographic
+</span></span></code></pre></div><h4 id="debugging-and-symbols">Debugging and symbols</h4>
+<p>As that we can&rsquo;t really interract or debug the kernel and the vulnerable driver.
+We need to have the vmlinux files</p>
+<p>There is four available kernel hacking challenge on the hackropole platform:
+<a href="https://hackropole.fr/fr/challenges/pwn">https://hackropole.fr/fr/challenges/pwn</a></p>
+<p>Let&rsquo;s begin with the easiest one:</p>
+<h2 id="pépin">Pépin</h2>
+<p>Just a docker image is provided for this challenge:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>└─$ cat docker-compose.yml 
+</span></span><span style="display:flex;"><span>services:
+</span></span><span style="display:flex;"><span>  pepin:
+</span></span><span style="display:flex;"><span>    image: anssi/fcsc2020-pwn-pepin:latest
+</span></span><span style="display:flex;"><span>    ports:
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;2222:22&#34;</span>
+</span></span></code></pre></div><p>That we launch with</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>└─$ docker compose up
+</span></span><span style="display:flex;"><span>└─$ ssh -p <span style="color:#ae81ff">2222</span> ctf@localhost <span style="color:#f92672">(</span>password: ctf<span style="color:#f92672">)</span>
+</span></span></code></pre></div><p>WE have all the files mentionned before :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ctf@bb5418c1b1fe:~$ ls -la
+</span></span><span style="display:flex;"><span>total <span style="color:#ae81ff">3656</span>
+</span></span><span style="display:flex;"><span>dr-xr-xr-x <span style="color:#ae81ff">1</span> ctf-admin ctf-admin    <span style="color:#ae81ff">4096</span> Nov <span style="color:#ae81ff">29</span>  <span style="color:#ae81ff">2023</span> .
+</span></span><span style="display:flex;"><span>drwxr-xr-x <span style="color:#ae81ff">1</span> ctf-admin ctf          <span style="color:#ae81ff">4096</span> Nov <span style="color:#ae81ff">29</span>  <span style="color:#ae81ff">2023</span> ..
+</span></span><span style="display:flex;"><span>-rwxr-xr-x <span style="color:#ae81ff">1</span> ctf-admin ctf-admin    <span style="color:#ae81ff">1312</span> Oct <span style="color:#ae81ff">25</span>  <span style="color:#ae81ff">2023</span> .start.sh
+</span></span><span style="display:flex;"><span>-rw------- <span style="color:#ae81ff">1</span> ctf-admin ctf-admin <span style="color:#ae81ff">2678688</span> Oct <span style="color:#ae81ff">25</span>  <span style="color:#ae81ff">2023</span> bzImage
+</span></span><span style="display:flex;"><span>-rw------- <span style="color:#ae81ff">1</span> ctf-admin ctf-admin <span style="color:#ae81ff">1026048</span> Oct <span style="color:#ae81ff">25</span>  <span style="color:#ae81ff">2023</span> initramfs.cpio
+</span></span><span style="display:flex;"><span>-rwsr-x--- <span style="color:#ae81ff">1</span> ctf-admin ctf         <span style="color:#ae81ff">16608</span> Nov <span style="color:#ae81ff">29</span>  <span style="color:#ae81ff">2023</span> wrapper
+</span></span><span style="display:flex;"><span>-rw-r--r-- <span style="color:#ae81ff">1</span> ctf-admin ctf           <span style="color:#ae81ff">126</span> Oct <span style="color:#ae81ff">25</span>  <span style="color:#ae81ff">2023</span> wrapper.c
+</span></span></code></pre></div><p>We can&rsquo;t extract the bzImage and initramfs on our host&hellip; but i hate working in docker</p>
+<p>It&rsquo;s possible to refind them in root in the docker overlay:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>┌──<span style="color:#f92672">(</span>root㉿kali<span style="color:#f92672">)</span>-<span style="color:#f92672">[</span>/var/…/e425d2c556db5b9042f348ad2aff0396d2e5ce3edc3b6ec113058400ae2f2201/diff/home/ctf<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>└─# ls
+</span></span><span style="display:flex;"><span>bzImage  initramfs.cpio  wrapper  wrapper.c
+</span></span><span style="display:flex;"><span>                                                                                                              
+</span></span><span style="display:flex;"><span>┌──<span style="color:#f92672">(</span>root㉿kali<span style="color:#f92672">)</span>-<span style="color:#f92672">[</span>/var/…/e425d2c556db5b9042f348ad2aff0396d2e5ce3edc3b6ec113058400ae2f2201/diff/home/ctf<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>└─# pwd               
+</span></span><span style="display:flex;"><span>/var/lib/docker/overlay2/e425d2c556db5b9042f348ad2aff0396d2e5ce3edc3b6ec113058400ae2f2201/diff/home/ctf
+</span></span></code></pre></div><p>We need to briefly modify the start.sh in order to correspond to our filesystem</p>
+<p>Let&rsquo;s also extract the initramfs.cpio in order to see the init file</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>└─$ cat init                    
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#!/bin/sh</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>export PATH<span style="color:#f92672">=</span>/bin
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span> -d /dev <span style="color:#f92672">]</span> <span style="color:#f92672">||</span> mkdir -m <span style="color:#ae81ff">0755</span> /dev
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span> -d /sys <span style="color:#f92672">]</span> <span style="color:#f92672">||</span> mkdir /sys
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span> -d /proc <span style="color:#f92672">]</span> <span style="color:#f92672">||</span> mkdir /proc
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span> -d /tmp <span style="color:#f92672">]</span> <span style="color:#f92672">||</span> mkdir /tmp
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span> -d /run <span style="color:#f92672">]</span> <span style="color:#f92672">||</span> mkdir /run
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span> -d /root <span style="color:#f92672">]</span> <span style="color:#f92672">||</span> mkdir /root
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span> -d /etc <span style="color:#f92672">]</span> <span style="color:#f92672">||</span> mkdir /etc
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span> -d /home <span style="color:#f92672">]</span> <span style="color:#f92672">||</span> mkdir /home
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span> -d /mnt <span style="color:#f92672">]</span> <span style="color:#f92672">||</span> mkdir /mnt
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>chmod <span style="color:#ae81ff">400</span> init
+</span></span><span style="display:flex;"><span>chmod -r init
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>chown -R root:root /
+</span></span><span style="display:flex;"><span>chmod <span style="color:#ae81ff">700</span> -R /root
+</span></span><span style="display:flex;"><span>chown ctf:ctf /home/ctf
+</span></span><span style="display:flex;"><span>chmod <span style="color:#ae81ff">777</span> /home/ctf
+</span></span><span style="display:flex;"><span>chmod <span style="color:#ae81ff">755</span> /dev
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>mkdir -p /mnt/share
+</span></span><span style="display:flex;"><span>mount -t 9p -o trans<span style="color:#f92672">=</span>virtio ecsc /mnt/share/ -oversion<span style="color:#f92672">=</span>9p2000.L,posix,msize<span style="color:#f92672">=</span>104857600,sync
+</span></span><span style="display:flex;"><span>chmod <span style="color:#ae81ff">777</span> /mnt/share/
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>mkdir -p /var/lock
+</span></span><span style="display:flex;"><span>mount -t sysfs -o nodev,noexec,nosuid sysfs /sys
+</span></span><span style="display:flex;"><span>mount -t proc -o nodev,noexec,nosuid proc /proc
+</span></span><span style="display:flex;"><span>ln -sf /proc/mounts /etc/mtab
+</span></span><span style="display:flex;"><span>mount -t devtmpfs -o nosuid,mode<span style="color:#f92672">=</span><span style="color:#ae81ff">0755</span> udev /dev
+</span></span><span style="display:flex;"><span>mkdir -p /dev/pts
+</span></span><span style="display:flex;"><span>mount -t devpts -o noexec,nosuid,gid<span style="color:#f92672">=</span>5,mode<span style="color:#f92672">=</span><span style="color:#ae81ff">0620</span> devpts /dev/pts <span style="color:#f92672">||</span> true
+</span></span><span style="display:flex;"><span>mount -t tmpfs -o <span style="color:#e6db74">&#34;noexec,nosuid,size=10%,mode=0755&#34;</span> tmpfs /run
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>echo <span style="color:#ae81ff">0</span> &gt; /proc/sys/kernel/kptr_restrict
+</span></span><span style="display:flex;"><span>echo <span style="color:#ae81ff">1</span> &gt; /proc/sys/kernel/perf_event_paranoid
+</span></span><span style="display:flex;"><span>echo <span style="color:#ae81ff">2</span> &gt; /proc/sys/kernel/randomize_va_space
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cat <span style="color:#e6db74">&lt;&lt;EOF
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"> _______  _______  _______  _______    ___   _  _______  ______    __    _  _______  ___
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">|       ||       ||       ||       |  |   | | ||       ||    _ |  |  |  | ||       ||   |
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">|    ___||       ||  _____||       |  |   |_| ||    ___||   | ||  |   |_| ||    ___||   |
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">|   |___ |       || |_____ |       |  |      _||   |___ |   |_||_ |       ||   |___ |   |
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">|    ___||      _||_____  ||      _|  |     |_ |    ___||    __  ||  _    ||    ___||   |___
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">|   |    |     |_  _____| ||     |_   |    _  ||   |___ |   |  | || | |   ||   |___ |       |
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">|___|    |_______||_______||_______|  |___| |_||_______||___|  |_||_|  |__||_______||_______|
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">EOF</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>setsid cttyhack setuidgid <span style="color:#ae81ff">1000</span> /bin/sh
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>umount /proc
+</span></span><span style="display:flex;"><span>umount /sys
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>poweroff -d <span style="color:#ae81ff">0</span> -f 2&gt;&amp;<span style="color:#ae81ff">1</span> &gt;/dev/null
+</span></span></code></pre></div><p>Bon &hellip; pas de module kernel apparement, notre seul manière d&rsquo;interagir avec c&rsquo;est de lister les points d&rsquo;entrées du kernel dans /proc/kallsyms
+après plusieurs rechecrhes:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>/ $ cat /proc/kallsyms | grep ecsc
+</span></span><span style="display:flex;"><span>ffffffffb8d11e92 T sys_ecsc_getflag
+</span></span></code></pre></div><p>Vous avez accès à une machine qui semble avoir un noyau Linux possédant un appel système 333 particulier qui écrit dans dmesg. Une fois connecté via SSH (ctf:ctf), utilisez le wrapper pour lancer le challenge.&rsquo;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-asm" data-lang="asm"><span style="display:flex;"><span><span style="color:#a6e22e">.text</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">.globl</span> <span style="color:#66d9ef">_start</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>_start:
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">mov</span> <span style="color:#66d9ef">$333</span>, %rax
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">syscall</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">mov</span> <span style="color:#66d9ef">$0</span>, %rdi
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">mov</span> <span style="color:#66d9ef">$0x3c</span>, %rax
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">syscall</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>└─$ as sc.S -o sc.o
+</span></span><span style="display:flex;"><span>└─$ ld sc.o -o sc     
+</span></span><span style="display:flex;"><span>└─$ cp sc /tmp/tmp.gOuSa0ILmL 
+</span></span></code></pre></div><p>in the vm we can launch this ioctl</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>/ $ /mnt/share/sc
+</span></span><span style="display:flex;"><span>/ $ echo $?
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">0</span>
+</span></span></code></pre></div><p>nothing append
+but if we watch the kernel logs, the flag appears</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>dmesg
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>FCSC<span style="color:#f92672">{</span>b820fd6ce2365286396c923b899477577b0b97036a37ace0e93fd6b628d833ad<span style="color:#f92672">}</span>
+</span></span></code></pre></div><h2 id="hello-rootkitty">Hello Rootkitty</h2>
+<h2 id="hello-rootkitty-harder">Hello Rootkitty (harder)</h2>
+<h2 id="ktruc">ktruc</h2>
+
+
+    <ul>
+    
+    </ul>
+
+
+        </section>
+
+        <section class="page__aside">
+            <div class="aside__about">
+
+<ul class="aside__social-links">
+    
+</ul>
+</div>
+
+            <div class="aside__content">
+    
+
+            </div>
+            <div class="aside__toc">
+                <nav id="TableOfContents">
+  <ol>
+    <li><a href="#setup">Setup</a>
+      <ol>
+        <li><a href="#files">Files</a>
+          <ol>
+            <li><a href="#challko">chall.ko</a></li>
+            <li><a href="#bzimage">bzImage</a></li>
+            <li><a href="#iniramfs">iniramfs</a></li>
+          </ol>
+        </li>
+        <li><a href="#debug">Debug</a>
+          <ol>
+            <li><a href="#what-is-launched-">What is launched ?</a></li>
+            <li><a href="#debugging-and-symbols">Debugging and symbols</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#pépin">Pépin</a></li>
+    <li><a href="#hello-rootkitty">Hello Rootkitty</a></li>
+    <li><a href="#hello-rootkitty-harder">Hello Rootkitty (harder)</a></li>
+    <li><a href="#ktruc">ktruc</a></li>
+  </ol>
+</nav>
+            </div>
+        </section>
+
+        <section class="page__leftside">
+            
+
+            
+
+<section class="page__leftside">
+    
+    <nav class="menu">
+        <ul>
+            
+            <li>
+                <a href="/ctf/">CTF</a>
+
+                
+                <ul>
+                    
+                        <li><a href="/ctf/hackropole/">HACKROPOLE</a></li>
+                    
+                        <li><a href="/ctf/ehax_02_26/">EHAX 02/26</a></li>
+                    
+                        <li><a href="/ctf/0xfun_02_26/">OxFun 02/26</a></li>
+                    
+                        <li><a href="/ctf/pascalctf_01_26/">PascalCTF 01/26</a></li>
+                    
+                        <li><a href="/ctf/0xlaugh_01_26/">0xLaugh 01/26</a></li>
+                    
+                        <li><a href="/ctf/scarletctf_01_26/">Scarlet CTF 01/26</a></li>
+                    
+                </ul>
+                
+
+            </li>
+            
+            <li>
+                <a href="/notes/">Notes</a>
+
+                
+                <ul>
+                    
+                        <li><a href="/notes/kernel/">A day in Kernel hacking</a></li>
+                    
+                        <li><a href="/notes/chall_syn_h2025/">Chall Synacktiv 12/25</a></li>
+                    
+                </ul>
+                
+
+            </li>
+            
+        </ul>
+    </nav>
+    
+</section>
+        </section>
+
+        <footer class="page__footer"><p>
+    
+    
+    
+    
+    
+    
+    
+    
+      
+      
+          
+            
+            
+                <br/><span class="active">$ echo $LANG<br/><b></b></span><br/>
+
+            
+          
+      
+    
+</p>
+<br /><br />
+<p class="copyright"></p>
+<p class="advertisement">Powered by <a href="https://gohugo.io/">hugo</a> and <a href="https://github.com/joeroe/risotto">risotto</a>.</p>
+</footer>
+
+    </div>
+</body>
+
+</html>
