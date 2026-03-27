@@ -207,8 +207,8 @@ https://hackropole.fr/en/pwn/
 <tr>
   <td>Pépin</td>
   <td>2</td>
-  <td>❌</td>
-  <td></td>
+  <td>✅</td>
+  <td><a href="/ctf/hackropole/pwn/pepin/">solve.md</a></td>
 </tr>
 
 

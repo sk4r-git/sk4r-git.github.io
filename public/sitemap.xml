@@ -2,6 +2,9 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://sk4r-git.github.io/ctf/hackropole/pwn/pepin/</loc>
+    <lastmod>2026-03-27T06:49:27+01:00</lastmod>
+  </url><url>
     <loc>https://sk4r-git.github.io/ctf/hackropole/crypto/crayon_cochon/</loc>
     <lastmod>2026-03-26T20:01:07+01:00</lastmod>
   </url><url>

@@ -19,8 +19,8 @@ Befor diving in kernel hacking we must understand
 #### chall.ko
 It's the module which is launched in the kernel, necessarly vulnerable if it's a challenge
 
-As a module it exposed differents endpoints with are trigerrable through IOCTL's it's like syscalls, just specific to a driver.
-**exemple d'ioctl**
+As a module it exposed differents endpoints with are trigerrable through IOCTL's. It's like syscalls, just specific to a driver.
+
 Or hooked function that we can trigger through normal system working 
 
 ```bash
@@ -48,7 +48,7 @@ c88211fc t tostring_exit	[basic1_ch1]
 c88211fc t cleanup_module	[basic1_ch1]
 ```
 #### bzImage
-This is the kernel that we will work with
+This is the kernel that we will work with, generally compressed (and then extractable ;))
 ```bash
 └─$ file bzImage 
 bzImage: Linux kernel x86 boot executable, bzImage, version 4.14.167 (root@vps783610) #11 Fri Feb 14 16:47:58 CET 2020, RO-rootFS, Normal VGA, setup size 512*30, syssize 0x2821d, jump 0x268 0x8cd88ec0fc8cd239 instruction, protocol 2.13, from protected-mode code at offset 0x276 0x2540eb bytes gzip compressed, relocatable, legacy 64-bit entry point, can be above 4G, max cmdline size 2047, init_size 0xd89000
@@ -114,6 +114,29 @@ There is four available kernel hacking challenge on the hackropole platform:
 https://hackropole.fr/fr/challenges/pwn
 
 Let's begin with the easiest one:
+
+### Kernel goals
+As we deal with code already runinng in kernel land, we won't interract with it in the same way as in userland pwn.
+
+In userland we generally want to abuse a program in order to get shell, and we can commmunication with this programme through userland entries en classics IPC.
+
+Here the 'program' that we wan't attack is the kernel so we would also have IPC but not classic stdin(out/err).
+
+We will have to write C programs that can open drivers (/dev/xxx) or trigger syscalls.
+
+#### The vulns
+Vulns seems to be the same as userland, memory errors that leads to code redirection (stack/heap/and maybe other things).
+
+#### The exploit
+Depending on what the modules do the goal can be multiples,
+
+<ol style="margin: 0; padding-left: 20px;">
+<li>identify a way to interract with the driver, syscall/ioctl</li>
+<li>identify the vulnerability and gain code execution control</li>
+<li>either deactivate the module or call specific module function or do the classic kernel ROPchain:</li>
+<li>commit_creds(prepare_kernel_creds(0)) which will give root rights to our C program</li>
+<li>before calling system("/bin/sh") and have a root shell.</li>
+</ol>
 
 ## Pépin
 Just a docker image is provided for this challenge:
@@ -221,15 +244,22 @@ umount /sys
 poweroff -d 0 -f 2>&1 >/dev/null
 ```
 
-Bon ... pas de module kernel apparement, notre seul manière d'interagir avec c'est de lister les points d'entrées du kernel dans /proc/kallsyms
-après plusieurs rechecrhes:
+It doesn't seems to have kernel module, let's try to find a interesting syscall:
 
 ```bash
-/ $ cat /proc/kallsyms | grep ecsc
+/ $ cat /proc/kallsyms | grep -iE 'ecsc|fcsc|flag'
+...
 ffffffffb8d11e92 T sys_ecsc_getflag
+...
 ```
+There is an interesting syscall but we can't know what number trigger it
+Maybe we can brute force it but let's read the challenge description:
 
-Vous avez accès à une machine qui semble avoir un noyau Linux possédant un appel système 333 particulier qui écrit dans dmesg. Une fois connecté via SSH (ctf:ctf), utilisez le wrapper pour lancer le challenge.'
+<div style="border:1px solid #ff0000; padding:15px; margin:20px 0; border-radius:8px;">
+You have access to a machine that seems to have a Linux kernel with a particular system call (number 333) that writes to dmesg. Once connected via SSH (credentials: ctf:ctf), use ./wrapper to launch the challenge.
+</div>
+
+Ok, easy win, just call the 333 syscall and watch in dmesg
 
 ```asm
 .text
@@ -262,7 +292,7 @@ but if we watch the kernel logs, the flag appears
 ```bash
 dmesg
 ...
-FCSC{b820fd6ce2365286396c923b899477577b0b97036a37ace0e93fd6b628d833ad}
+FCSC{REDACTED}
 ```
 ## Hello Rootkitty
 
