@@ -21,7 +21,7 @@ Synacktiv invite us to construct a binary following some rules, this binary must
 Let's learn kernel hacking through the four challenges available in the hackropole platform
 </div>
 
-<div style="border:1px solid #ff0000; padding:15px; margin:20px 0; border-radius:8px;" class=ARM>
+<!-- <div style="border:1px solid #ff0000; padding:15px; margin:20px 0; border-radius:8px;" class=ARM>
   <a href="/notes/">A day in ARM hacking</a><br>
 Let's learn ARM hacking through the challenges available in the hackropole platform and pwncolege dojos
 ...Comming Soon...
@@ -32,4 +32,4 @@ Let's learn ARM hacking through the challenges available in the hackropole platf
 Let's learn Fuzzing through the pwncolege dojos
 ...Comming Soon...
 </div>
-
+ -->
