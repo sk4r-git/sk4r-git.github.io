@@ -280,7 +280,7 @@ _start:
 └─$ cp sc /tmp/tmp.gOuSa0ILmL 
 ```
 
-in the vm we can launch this ioctl
+in the vm we can launch this program
 ```bash
 / $ /mnt/share/sc
 / $ echo $?
