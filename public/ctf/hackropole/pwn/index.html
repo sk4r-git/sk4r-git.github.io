@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head><title>Pwn &ndash; Sk4r</title>
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8"/>
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css" integrity="sha512-IW0nhlW5MgNydsXJO40En2EoCkTTjZhI3yuODrZIc8cQ4h1XcF53PsqDHa09NqnkXuIe0Oiyyj171BqZFwISBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+<link rel="stylesheet" href="https://sk4r-git.github.io/css/palettes/base16-dark.css">
+<link rel="stylesheet" href="https://sk4r-git.github.io/css/risotto.css">
+<link rel="stylesheet" href="https://sk4r-git.github.io/css/custom.css">
+
+
+
+
+
+
+
+
+
+<link rel="alternate" type="application/rss+xml" href="https://sk4r-git.github.io/ctf/hackropole/pwn/index.xml" title="Sk4r">
+
+
+
+<meta property="og:title" content="Pwn &ndash; Sk4r" />
+<meta property="og:url" content="https://sk4r-git.github.io/ctf/hackropole/pwn/" />
+
+  
+
+<meta property="og:locale" content="fr-fr" />
+</head>
+
+<body>
+    <div class="page">
+
+        <header class="page__header"><nav class="page__nav main-nav">
+    <ul>
+      <li class="nomarker"><h1 class="page__logo"><a href="https://sk4r-git.github.io/" class="page__logo-inner">Sk4r</a></h1></li>
+    
+    
+    </ul>
+</nav>
+
+</header>
+
+        <section class="page__body">
+    <h1 id="pwn">Pwn</h1>
+
+    <p>All Hackropole challenges are availables here :</p>
+<p><a href="https://hackropole.fr/en/pwn/">https://hackropole.fr/en/pwn/</a></p>
+<!-- check = ✅ -->
+<table border="1" cellpadding="6" cellspacing="0">
+<tr>
+  <th>Chall</th>
+  <th>Diff</th>
+  <th>Solved</th>
+  <th>Link</th>
+</tr>
+<tr>
+  <td>Blind Attack</td>
+  <td>1</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>bofbof</td>
+  <td>1</td>
+  <td>✅</td>
+  <td><a href="/ctf/hackropole/pwn/bofbof/">solve.md</a></td>
+</tr>
+<tr>
+  <td>Bonus Points</td>
+  <td>1</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Call Me Blah</td>
+  <td>1</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Dépassement de tampon</td>
+  <td>1</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Poney</td>
+  <td>1</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Shellcode</td>
+  <td>1</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>uid</td>
+  <td>1</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>yabof</td>
+  <td>1</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>yapuka</td>
+  <td>1</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Aarchibald</td>
+  <td>2</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Armory</td>
+  <td>2</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>asmophile</td>
+  <td>2</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Back to BASIC</td>
+  <td>2</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Book Writer (Easy)</td>
+  <td>2</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Harmless</td>
+  <td>2</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Hola Armigo</td>
+  <td>2</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Long Prime Shellcode</td>
+  <td>2</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>May the Forth</td>
+  <td>2</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>microroptor</td>
+  <td>2</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Note a Bug (d0g bUt h4ppY)</td>
+  <td>2</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Note a Bug (Red Beer)</td>
+  <td>2</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Patchinko</td>
+  <td>2</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Pépin</td>
+  <td>2</td>
+  <td>✅</td>
+  <td><a href="/ctf/hackropole/pwn/pepin/">solve.md</a></td>
+</tr>
+<tr>
+  <td>Seguin</td>
+  <td>2</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>XORaaS</td>
+  <td>2</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>XORTP</td>
+  <td>2</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Alfred Hitchlock</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Bigorneau</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Book Writer</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Build Your Own ECSC Team</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Cheapie</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>cheapolata</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>deflation</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>eraise</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Hashed Shellcode</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Hello Rootkitty</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>http3</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Itsy Mipsy Router</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Keskidi</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Malware 2/3</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>May the Fifth</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Note a Bug (Nordic Mollusks)</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Palindrome</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Palindrome (Harder)</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Plouf Plouf</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Ptérodactyle</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pwnduino</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Risky Business</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Robot</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>RPG</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Small Primes Shellcode</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Super Factorizer</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Why not a Sandbox?</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Zarby Write</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>BASHi Bouzouk</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Blind Date</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Éditeur de configuration</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Encrypted Shellcode</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>File Checker</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>formatage</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Hello Rootkitty (Harder)</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Holy Cow</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>HTTP 2</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>httpd</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Juste à Temps</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>ktruc</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Reporter</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>RsaCE</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Secure Vault</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Swift Encryptor</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Tik Tak Tok</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+</table>
+
+    <ul>
+    
+    </ul>
+
+
+        </section>
+
+        <section class="page__aside">
+            <div class="aside__about">
+
+<ul class="aside__social-links">
+    
+</ul>
+</div>
+
+            <div class="aside__content">
+    
+
+            </div>
+            <div class="aside__toc">
+                <nav id="TableOfContents"></nav>
+            </div>
+        </section>
+
+        <section class="page__leftside">
+            
+
+            
+
+<section class="page__leftside">
+    
+    <nav class="menu">
+        <ul>
+            
+            <li>
+                <a href="/ctf/">CTF</a>
+
+                
+                <ul>
+                    
+                        <li><a href="/ctf/ehax_02_26/">EHAX 02/26</a></li>
+                    
+                        <li><a href="/ctf/0xfun_02_26/">OxFun 02/26</a></li>
+                    
+                        <li><a href="/ctf/pascalctf_01_26/">PascalCTF 01/26</a></li>
+                    
+                        <li><a href="/ctf/0xlaugh_01_26/">0xLaugh 01/26</a></li>
+                    
+                        <li><a href="/ctf/scarletctf_01_26/">Scarlet CTF 01/26</a></li>
+                    
+                </ul>
+                
+
+            </li>
+            
+            <li>
+                <a href="/notes/">Notes</a>
+
+                
+                <ul>
+                    
+                        <li><a href="/notes/kernel/">A day in Kernel hacking</a></li>
+                    
+                        <li><a href="/notes/chall_syn_h2025/">Chall Synacktiv 12/25</a></li>
+                    
+                </ul>
+                
+
+            </li>
+            
+        </ul>
+    </nav>
+    
+</section>
+        </section>
+
+        <footer class="page__footer"><p>
+    
+    
+    
+    
+    
+    
+    
+    
+      
+      
+          
+            
+            
+                <br/><span class="active">$ echo $LANG<br/><b></b></span><br/>
+
+            
+          
+      
+    
+</p>
+<br /><br />
+<p class="copyright"></p>
+<p class="advertisement">Powered by <a href="https://gohugo.io/">hugo</a> and <a href="https://github.com/joeroe/risotto">risotto</a>.</p>
+</footer>
+
+    </div>
+</body>
+
+</html>

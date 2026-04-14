@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head><title>Reverse &ndash; Sk4r</title>
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8"/>
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css" integrity="sha512-IW0nhlW5MgNydsXJO40En2EoCkTTjZhI3yuODrZIc8cQ4h1XcF53PsqDHa09NqnkXuIe0Oiyyj171BqZFwISBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+<link rel="stylesheet" href="https://sk4r-git.github.io/css/palettes/base16-dark.css">
+<link rel="stylesheet" href="https://sk4r-git.github.io/css/risotto.css">
+<link rel="stylesheet" href="https://sk4r-git.github.io/css/custom.css">
+
+
+
+
+
+
+
+
+
+<link rel="alternate" type="application/rss+xml" href="https://sk4r-git.github.io/ctf/hackropole/reverse/index.xml" title="Sk4r">
+
+
+
+<meta property="og:title" content="Reverse &ndash; Sk4r" />
+<meta property="og:url" content="https://sk4r-git.github.io/ctf/hackropole/reverse/" />
+
+  
+
+<meta property="og:locale" content="fr-fr" />
+</head>
+
+<body>
+    <div class="page">
+
+        <header class="page__header"><nav class="page__nav main-nav">
+    <ul>
+      <li class="nomarker"><h1 class="page__logo"><a href="https://sk4r-git.github.io/" class="page__logo-inner">Sk4r</a></h1></li>
+    
+    
+    </ul>
+</nav>
+
+</header>
+
+        <section class="page__body">
+    <h1 id="reverse">Reverse</h1>
+
+    <p>All Hackropole challenges are availables here :</p>
+<p><a href="https://hackropole.fr/en/reverse/">https://hackropole.fr/en/reverse/</a></p>
+<!-- check = ✅ -->
+<table border="1" cellpadding="6" cellspacing="0">
+<tr>
+  <th>Chall</th>
+  <th>Diff</th>
+  <th>Solved</th>
+  <th>Link</th>
+</tr>
+<tr>
+  <td>Aaarg</td>
+  <td>1</td>
+  <td>✅</td>
+  <td><a href="/ctf/hackropole/reverse/aaarg/">solve.md</a></td>
+</tr>
+<tr>
+  <td>Catch me if you can</td>
+  <td>1</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Fifty Shades of White (Junior)</td>
+  <td>1</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Guessy</td>
+  <td>1</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Password Manager</td>
+  <td>1</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Sloubi</td>
+  <td>1</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Strike</td>
+  <td>1</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Tarte Tatin</td>
+  <td>1</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Vault</td>
+  <td>1</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>ybab</td>
+  <td>1</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>À temps tôt</td>
+  <td>2</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>babyfuscation</td>
+  <td>2</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Chaussette (XS)</td>
+  <td>2</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Chiffre Unique</td>
+  <td>2</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Chrominausor</td>
+  <td>2</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Extension</td>
+  <td>2</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Fifty Shades of White (Pinkman)</td>
+  <td>2</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Hit or MIPS</td>
+  <td>2</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Iconic license</td>
+  <td>2</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Infiltrate</td>
+  <td>2</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Jakarta</td>
+  <td>2</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Polygraph</td>
+  <td>2</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Sensor Watch</td>
+  <td>2</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Serial Keyler</td>
+  <td>2</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Souk</td>
+  <td>2</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>AES Distrace</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Archiver</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Back to School</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Chatouille</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Chaussette</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Coloratops</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>EXTerminated</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Hexagonal</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Hyper Packer</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Licorne</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Los Polllos Hermanos</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Magasin à Secret</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Malware 3/3</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Mazetodon</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Mikado</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Nightwish</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Parmentier</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>PORS</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>PTSD - Encore une fois</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>PTSD - Init</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>ShuffleMe</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Slowppiness</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>The Pytector</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>TV Hacks 1/2</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Zigoto</td>
+  <td>3</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>alfheim</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Ariane</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Brachiosaure</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Bugs Buggy</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Contrôleur de licence</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Diplodocus</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Diplodocus (Harder)</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>fcsclang</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Flag Checker 2</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Hola Amigo</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>keykoolol</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Kraken</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Mégalosaure</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>More Hello</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Nessie</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Perfect Cell</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Picasso</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Pineapple Baguette</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Quack Pack</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Revaulting</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Share It</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Smartboot 2/2</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>SSEcret</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Stars:2ndMix CryptoEdition</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>svartalfheim</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>The Offenders</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Transient Protector</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Triceratops</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>TV Hacks 2/2</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Video Games Awards</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+<tr>
+  <td>VMV</td>
+  <td>4</td>
+  <td>❌</td>
+  <td></td>
+</tr>
+</table>
+
+
+    <ul>
+    
+    </ul>
+
+
+        </section>
+
+        <section class="page__aside">
+            <div class="aside__about">
+
+<ul class="aside__social-links">
+    
+</ul>
+</div>
+
+            <div class="aside__content">
+    
+
+            </div>
+            <div class="aside__toc">
+                <nav id="TableOfContents"></nav>
+            </div>
+        </section>
+
+        <section class="page__leftside">
+            
+
+            
+
+<section class="page__leftside">
+    
+    <nav class="menu">
+        <ul>
+            
+            <li>
+                <a href="/ctf/">CTF</a>
+
+                
+                <ul>
+                    
+                        <li><a href="/ctf/ehax_02_26/">EHAX 02/26</a></li>
+                    
+                        <li><a href="/ctf/0xfun_02_26/">OxFun 02/26</a></li>
+                    
+                        <li><a href="/ctf/pascalctf_01_26/">PascalCTF 01/26</a></li>
+                    
+                        <li><a href="/ctf/0xlaugh_01_26/">0xLaugh 01/26</a></li>
+                    
+                        <li><a href="/ctf/scarletctf_01_26/">Scarlet CTF 01/26</a></li>
+                    
+                </ul>
+                
+
+            </li>
+            
+            <li>
+                <a href="/notes/">Notes</a>
+
+                
+                <ul>
+                    
+                        <li><a href="/notes/kernel/">A day in Kernel hacking</a></li>
+                    
+                        <li><a href="/notes/chall_syn_h2025/">Chall Synacktiv 12/25</a></li>
+                    
+                </ul>
+                
+
+            </li>
+            
+        </ul>
+    </nav>
+    
+</section>
+        </section>
+
+        <footer class="page__footer"><p>
+    
+    
+    
+    
+    
+    
+    
+    
+      
+      
+          
+            
+            
+                <br/><span class="active">$ echo $LANG<br/><b></b></span><br/>
+
+            
+          
+      
+    
+</p>
+<br /><br />
+<p class="copyright"></p>
+<p class="advertisement">Powered by <a href="https://gohugo.io/">hugo</a> and <a href="https://github.com/joeroe/risotto">risotto</a>.</p>
+</footer>
+
+    </div>
+</body>
+
+</html>
