@@ -18,11 +18,7 @@ tag = ""
 
 [menu]
 
-  [[menu.sidebar]]
-  name = "HACKROPOLE"
-  url = "/ctf/HACKROPOLE/"
-  parent = "CTF"
-  weight = 6
+
 
   [[menu.sidebar]]
   name = "EHAX 02/26"
