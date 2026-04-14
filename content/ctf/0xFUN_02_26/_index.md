@@ -12,13 +12,13 @@ title = '0xFUN_02_26'
 <!-------------------------------------------------------------------------------------->
 ### 67
 #### attachments
-<div>
+
 <a href="/ctf/0xfun_02_26/67/chall">chall</a>
 <a href="/ctf/0xfun_02_26/67/chall_patched">chall_patched</a>
 <a href="/ctf/0xfun_02_26/67/ld-linux-x86-64.so.2">ld-linux-x86-64.so.2</a>
 <a href="/ctf/0xfun_02_26/67/libc.so.6">libc.so.6</a>
 <a href="/ctf/0xfun_02_26/67/solve.py">solve.py</a>
-</div>
+
 #### reverse
 Classical heap challenge<br>
 vuln is obvious it's a use after free<br>
