@@ -60,17 +60,19 @@
 <!-------------------------------------------------------------------------------------->
 <h3 id="67">67</h3>
 <h4 id="attachments">attachments</h4>
-<p><a href="/ctf/0xfun_02_26/67/chall">chall</a>
+<div>
+<a href="/ctf/0xfun_02_26/67/chall">chall</a>
 <a href="/ctf/0xfun_02_26/67/chall_patched">chall_patched</a>
 <a href="/ctf/0xfun_02_26/67/ld-linux-x86-64.so.2">ld-linux-x86-64.so.2</a>
 <a href="/ctf/0xfun_02_26/67/libc.so.6">libc.so.6</a>
-<a href="/ctf/0xfun_02_26/67/solve.py">solve.py</a></p>
-<h4 id="reverse">reverse</h4>
-<p>Classical heap challenge<br>
-vuln is obvious it&rsquo;s a use after free<br>
+<a href="/ctf/0xfun_02_26/67/solve.py">solve.py</a>
+</div>
+#### reverse
+Classical heap challenge<br>
+vuln is obvious it's a use after free<br>
 no double free but we can reuse free chunks to edit them or print them<br>
 Allocated chunks are stored by index in tab but we can alloc in tab[n] even if this tab entry is already allocated which ease the heap managment<br><br>
-The libc is reall recent so</p>
+The libc is reall recent so 
 <ol>
 <li>No house of water to gain easy unsorted bin leak</li>
 <li>No malloc/free_hook</li>
@@ -309,7 +311,7 @@ ROPchain seems to be the easiest way.</p>
 <p><a href="/ctf/0xfun_02_26/fridge/vuln">vuln</a>
 <a href="/ctf/0xfun_02_26/fridge/vuln_patched">vuln_patched</a>
 <a href="/ctf/0xfun_02_26/fridge/solve.py">solve.py</a></p>
-<h4 id="reverse-1">reverse</h4>
+<h4 id="reverse">reverse</h4>
 <p>There is a big overflow in the function &lsquo;set_welcome_message&rsquo;:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C" data-lang="C"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">set_welcome_message</span>(<span style="color:#66d9ef">void</span>)
 </span></span><span style="display:flex;"><span>
@@ -356,7 +358,7 @@ So let&rsquo;s do a minimal 32 bit ROPchain.</p>
 <p><a href="/ctf/0xfun_02_26/what_you_have/chall">chall</a>
 <a href="/ctf/0xfun_02_26/what_you_have/chall_patched">chall_patched</a>
 <a href="/ctf/0xfun_02_26/what_you_have/solve.py">solve.py</a></p>
-<h4 id="reverse-2">reverse</h4>
+<h4 id="reverse-1">reverse</h4>
 <ol>
 <li>not PIE</li>
 <li>not RELRO</li>
@@ -422,21 +424,20 @@ Sk4r.</p>
         <li><a href="#67">67</a>
           <ol>
             <li><a href="#attachments">attachments</a></li>
-            <li><a href="#reverse">reverse</a></li>
             <li><a href="#solve">solve</a></li>
           </ol>
         </li>
         <li><a href="#fridge">fridge</a>
           <ol>
             <li><a href="#attachments-1">attachments</a></li>
-            <li><a href="#reverse-1">reverse</a></li>
+            <li><a href="#reverse">reverse</a></li>
             <li><a href="#solve-1">solve</a></li>
           </ol>
         </li>
         <li><a href="#what_you_have">what_you_have</a>
           <ol>
             <li><a href="#attachments-2">attachments</a></li>
-            <li><a href="#reverse-2">reverse</a></li>
+            <li><a href="#reverse-1">reverse</a></li>
             <li><a href="#solve-2">solve</a></li>
           </ol>
         </li>
