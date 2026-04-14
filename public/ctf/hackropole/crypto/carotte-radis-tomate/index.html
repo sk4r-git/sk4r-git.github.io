@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head><title>Carotte Radis Tomate &ndash; Sk4r</title>
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8"/>
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css" integrity="sha512-IW0nhlW5MgNydsXJO40En2EoCkTTjZhI3yuODrZIc8cQ4h1XcF53PsqDHa09NqnkXuIe0Oiyyj171BqZFwISBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+<link rel="stylesheet" href="https://sk4r-git.github.io/css/palettes/base16-dark.css">
+<link rel="stylesheet" href="https://sk4r-git.github.io/css/risotto.css">
+<link rel="stylesheet" href="https://sk4r-git.github.io/css/custom.css">
+
+
+
+
+
+
+
+
+
+<link rel="alternate" type="application/rss+xml" href="https://sk4r-git.github.io/ctf/hackropole/crypto/carotte-radis-tomate/index.xml" title="Sk4r">
+
+
+
+<meta property="og:title" content="Carotte Radis Tomate &ndash; Sk4r" />
+<meta property="og:url" content="https://sk4r-git.github.io/ctf/hackropole/crypto/carotte-radis-tomate/" />
+
+  
+
+<meta property="og:locale" content="fr-fr" />
+</head>
+
+<body>
+    <div class="page">
+
+        <header class="page__header"><nav class="page__nav main-nav">
+    <ul>
+      <li class="nomarker"><h1 class="page__logo"><a href="https://sk4r-git.github.io/" class="page__logo-inner">Sk4r</a></h1></li>
+    
+    
+    </ul>
+</nav>
+
+</header>
+
+        <section class="page__body">
+
+<h1>Carotte Radis Tomate</h1>
+
+<h2 id="attachments">Attachments</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> os
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> Crypto.Cipher <span style="color:#f92672">import</span> AES
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> Crypto.Util.Padding <span style="color:#f92672">import</span> pad
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>key <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>urandom(<span style="color:#ae81ff">32</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;carotte = &#34;</span>, int<span style="color:#f92672">.</span>from_bytes(key) <span style="color:#f92672">%</span> <span style="color:#ae81ff">17488856370348678479</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;radis   = &#34;</span>, int<span style="color:#f92672">.</span>from_bytes(key) <span style="color:#f92672">%</span> <span style="color:#ae81ff">16548497022403653709</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;tomate  = &#34;</span>, int<span style="color:#f92672">.</span>from_bytes(key) <span style="color:#f92672">%</span> <span style="color:#ae81ff">17646308379662286151</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;pomme   = &#34;</span>, int<span style="color:#f92672">.</span>from_bytes(key) <span style="color:#f92672">%</span> <span style="color:#ae81ff">14933475126425703583</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;banane  = &#34;</span>, int<span style="color:#f92672">.</span>from_bytes(key) <span style="color:#f92672">%</span> <span style="color:#ae81ff">17256641469715966189</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>flag <span style="color:#f92672">=</span> open(<span style="color:#e6db74">&#34;flag.txt&#34;</span>, <span style="color:#e6db74">&#34;rb&#34;</span>)<span style="color:#f92672">.</span>read()
+</span></span><span style="display:flex;"><span>E <span style="color:#f92672">=</span> AES<span style="color:#f92672">.</span>new(key, AES<span style="color:#f92672">.</span>MODE_ECB)
+</span></span><span style="display:flex;"><span>enc <span style="color:#f92672">=</span> E<span style="color:#f92672">.</span>encrypt(pad(flag, <span style="color:#ae81ff">16</span>))
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;enc = </span><span style="color:#e6db74">{</span>enc<span style="color:#f92672">.</span>hex()<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>carotte <span style="color:#f92672">=</span>  <span style="color:#ae81ff">392278890668246705</span>
+</span></span><span style="display:flex;"><span>radis   <span style="color:#f92672">=</span>  <span style="color:#ae81ff">4588810924820033807</span>
+</span></span><span style="display:flex;"><span>tomate  <span style="color:#f92672">=</span>  <span style="color:#ae81ff">17164682861166542664</span>
+</span></span><span style="display:flex;"><span>pomme   <span style="color:#f92672">=</span>  <span style="color:#ae81ff">12928514648456294931</span>
+</span></span><span style="display:flex;"><span>banane  <span style="color:#f92672">=</span>  <span style="color:#ae81ff">5973470563196845286</span>
+</span></span><span style="display:flex;"><span>enc <span style="color:#f92672">=</span> 2da1dbe8c3a739d9c4a0dc29a27377fe8abc1c0feacc9475019c5954bbbf74dcedce7ed3dc3ba34fa14a9181d4d7ec0133ca96012b0a9f4aa93c42c61acbeae7640dd101a6d2db9ad4f3b8ccfe285e0d
+</span></span></code></pre></div><h2 id="reverse">Reverse</h2>
+<p>As the title of the challenge suggest it, we will have to use the Chinease Reminder Theorem.</p>
+<p>Let&rsquo;s try to remind the reminder theoreme</p>
+<ul>
+<li>a1 = k % a2</li>
+<li>b1 = k % b2</li>
+<li>c1 = k % c2</li>
+<li>d1 = k % d2</li>
+<li>e1 = k % e2</li>
+</ul>
+<p>&lt;=&gt;</p>
+<ul>
+<li>a1 = k - (a3*a2)</li>
+<li>b1 = k - (b3*b2)</li>
+<li>c1 = k - (c3*c2)</li>
+<li>d1 = k - (d3*d2)</li>
+<li>e1 = k - (e3*e2)</li>
+</ul>
+<p>OK, I won&rsquo;t remind&hellip; let&rsquo;s go on wikipedia</p>
+<p>Based on a example solution:</p>
+<div style="border:1px solid #ff0000; padding:15px; margin:20px 0; border-radius:8px;" class=0xfun_02_26>
+L'exemple de Sun Zi, présenté plus haut dans la section histoire, se réduit à
+<ul>
+<li>x ≡ 2 ( mod 3 )</li>
+<li>x ≡ 3 ( mod 5 )</li>
+<li>x ≡ 2 ( mod 7 )</li>
+</ul>
+<p>on obtient alors</p>
+<ul>
+<li>n = 3 × 5 × 7 = 105</li>
+<li>n_1 = 3 et nt1 = 5 × 7 = 35, or 2*nt1 ≡ 1 ( mod 3 ) donc e_1 = 70</li>
+<li>n_2 = 5 et nt2 = 3 × 7 = 21, or nt2 ≡ 1 ( mod 5 ) donc e_2 = 21</li>
+<li>n_3 = 7 et nt3 = 3 × 5 = 15, or nt3 ≡ 1 ( mod 7 )  donc e_3 = 15</li>
+</ul>
+<p>une solution pour x est alors x = 2 × 70 + 3 × 21 + 2 × 15 = 233</p>
+<p>et les solutions sont tous les entiers congrus à 233 modulo 105, c&rsquo;est-à-dire à 23 modulo 105.</p>
+</div>
+<h2 id="solve">Solve</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> os
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> Cryptodome.Cipher <span style="color:#f92672">import</span> AES
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> Cryptodome.Util.Padding <span style="color:#f92672">import</span> pad, unpad
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> Cryptodome.Util.number <span style="color:#f92672">import</span> GCD
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> Cryptodome.Util.number <span style="color:#f92672">import</span> long_to_bytes
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>a <span style="color:#f92672">=</span> carotte <span style="color:#f92672">=</span>  <span style="color:#ae81ff">392278890668246705</span>
+</span></span><span style="display:flex;"><span>b <span style="color:#f92672">=</span> radis   <span style="color:#f92672">=</span>  <span style="color:#ae81ff">4588810924820033807</span>
+</span></span><span style="display:flex;"><span>c <span style="color:#f92672">=</span> tomate  <span style="color:#f92672">=</span>  <span style="color:#ae81ff">17164682861166542664</span>
+</span></span><span style="display:flex;"><span>d <span style="color:#f92672">=</span> pomme   <span style="color:#f92672">=</span>  <span style="color:#ae81ff">12928514648456294931</span>
+</span></span><span style="display:flex;"><span>e <span style="color:#f92672">=</span> banane  <span style="color:#f92672">=</span>  <span style="color:#ae81ff">5973470563196845286</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ma <span style="color:#f92672">=</span> <span style="color:#ae81ff">17488856370348678479</span>
+</span></span><span style="display:flex;"><span>mb <span style="color:#f92672">=</span> <span style="color:#ae81ff">16548497022403653709</span>
+</span></span><span style="display:flex;"><span>mc <span style="color:#f92672">=</span> <span style="color:#ae81ff">17646308379662286151</span>
+</span></span><span style="display:flex;"><span>md <span style="color:#f92672">=</span> <span style="color:#ae81ff">14933475126425703583</span>
+</span></span><span style="display:flex;"><span>me <span style="color:#f92672">=</span> <span style="color:#ae81ff">17256641469715966189</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>n <span style="color:#f92672">=</span> ma <span style="color:#f92672">*</span> mb <span style="color:#f92672">*</span> mc <span style="color:#f92672">*</span> md <span style="color:#f92672">*</span> me
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>mat <span style="color:#f92672">=</span> n <span style="color:#f92672">//</span> ma
+</span></span><span style="display:flex;"><span>mbt <span style="color:#f92672">=</span> n <span style="color:#f92672">//</span> mb
+</span></span><span style="display:flex;"><span>mct <span style="color:#f92672">=</span> n <span style="color:#f92672">//</span> mc
+</span></span><span style="display:flex;"><span>mdt <span style="color:#f92672">=</span> n <span style="color:#f92672">//</span> md
+</span></span><span style="display:flex;"><span>met <span style="color:#f92672">=</span> n <span style="color:#f92672">//</span> me
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>man <span style="color:#f92672">=</span> pow(mat, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, ma)
+</span></span><span style="display:flex;"><span>mbn <span style="color:#f92672">=</span> pow(mbt, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, mb)
+</span></span><span style="display:flex;"><span>mcn <span style="color:#f92672">=</span> pow(mct, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, mc)
+</span></span><span style="display:flex;"><span>mdn <span style="color:#f92672">=</span> pow(mdt, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, md)
+</span></span><span style="display:flex;"><span>men <span style="color:#f92672">=</span> pow(met, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, me)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>k <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>k <span style="color:#f92672">+=</span> a <span style="color:#f92672">*</span> man <span style="color:#f92672">*</span> mat
+</span></span><span style="display:flex;"><span>k <span style="color:#f92672">+=</span> b <span style="color:#f92672">*</span> mbn <span style="color:#f92672">*</span> mbt
+</span></span><span style="display:flex;"><span>k <span style="color:#f92672">+=</span> c <span style="color:#f92672">*</span> mcn <span style="color:#f92672">*</span> mct
+</span></span><span style="display:flex;"><span>k <span style="color:#f92672">+=</span> d <span style="color:#f92672">*</span> mdn <span style="color:#f92672">*</span> mdt
+</span></span><span style="display:flex;"><span>k <span style="color:#f92672">+=</span> e <span style="color:#f92672">*</span> men <span style="color:#f92672">*</span> met
+</span></span><span style="display:flex;"><span>k <span style="color:#f92672">=</span> k <span style="color:#f92672">%</span> n
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">assert</span>(k <span style="color:#f92672">%</span> ma <span style="color:#f92672">==</span> a)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">assert</span>(k <span style="color:#f92672">%</span> mb <span style="color:#f92672">==</span> b)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">assert</span>(k <span style="color:#f92672">%</span> mc <span style="color:#f92672">==</span> c)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">assert</span>(k <span style="color:#f92672">%</span> md <span style="color:#f92672">==</span> d)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">assert</span>(k <span style="color:#f92672">%</span> me <span style="color:#f92672">==</span> e)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Everything seems to be OK :D&#34;</span>)
+</span></span><span style="display:flex;"><span>print(len(hex(k)))
+</span></span><span style="display:flex;"><span>enc <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;2da1dbe8c3a739d9c4a0dc29a27377fe8abc1c0feacc9475019c5954bbbf74dcedce7ed3dc3ba34fa14a9181d4d7ec0133ca96012b0a9f4aa93c42c61acbeae7640dd101a6d2db9ad4f3b8ccfe285e0d&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>E <span style="color:#f92672">=</span> AES<span style="color:#f92672">.</span>new(long_to_bytes(k), AES<span style="color:#f92672">.</span>MODE_ECB)
+</span></span><span style="display:flex;"><span>dec <span style="color:#f92672">=</span> E<span style="color:#f92672">.</span>decrypt(bytes<span style="color:#f92672">.</span>fromhex(enc))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>flag <span style="color:#f92672">=</span> unpad(dec, <span style="color:#ae81ff">16</span>)
+</span></span><span style="display:flex;"><span>print(flag)
+</span></span></code></pre></div><p>Thx.</p>
+<p>Sk4r.</p>
+
+
+
+        </section>
+
+        <section class="page__aside">
+            <div class="aside__about">
+
+<ul class="aside__social-links">
+    
+</ul>
+</div>
+
+            <div class="aside__content">
+            </div>
+            <div class="aside__toc">
+                <nav id="TableOfContents">
+  <ol>
+    <li><a href="#attachments">Attachments</a></li>
+    <li><a href="#reverse">Reverse</a></li>
+    <li><a href="#solve">Solve</a></li>
+  </ol>
+</nav>
+            </div>
+        </section>
+
+        <section class="page__leftside">
+            
+
+            
+
+<section class="page__leftside">
+    
+    <nav class="menu">
+        <ul>
+            
+            <li>
+                <a href="/ctf/">CTF</a>
+
+                
+                <ul>
+                    
+                        <li><a href="/ctf/ehax_02_26/">EHAX 02/26</a></li>
+                    
+                        <li><a href="/ctf/0xfun_02_26/">OxFun 02/26</a></li>
+                    
+                        <li><a href="/ctf/pascalctf_01_26/">PascalCTF 01/26</a></li>
+                    
+                        <li><a href="/ctf/0xlaugh_01_26/">0xLaugh 01/26</a></li>
+                    
+                        <li><a href="/ctf/scarletctf_01_26/">Scarlet CTF 01/26</a></li>
+                    
+                </ul>
+                
+
+            </li>
+            
+            <li>
+                <a href="/notes/">Notes</a>
+
+                
+                <ul>
+                    
+                        <li><a href="/notes/kernel/">A day in Kernel hacking</a></li>
+                    
+                        <li><a href="/notes/chall_syn_h2025/">Chall Synacktiv 12/25</a></li>
+                    
+                </ul>
+                
+
+            </li>
+            
+        </ul>
+    </nav>
+    
+</section>
+        </section>
+
+        <footer class="page__footer"><p>
+    
+    
+    
+    
+    
+    
+    
+    
+      
+      
+          
+            
+            
+                <br/><span class="active">$ echo $LANG<br/><b></b></span><br/>
+
+            
+          
+      
+    
+</p>
+<br /><br />
+<p class="copyright"></p>
+<p class="advertisement">Powered by <a href="https://gohugo.io/">hugo</a> and <a href="https://github.com/joeroe/risotto">risotto</a>.</p>
+</footer>
+
+    </div>
+</body>
+
+</html>

