@@ -13,6 +13,7 @@ Synacktiv invite us to construct a binary following some rules, this binary must
     <li>be a palindrome</li>
     <li>print himself</li>
     <li>be size minimal</li>
+  </ol>
 </div>
 
 
