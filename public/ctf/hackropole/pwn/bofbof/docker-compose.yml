@@ -1,5 +1,0 @@
-services:
-  bofbof:
-    image: anssi/fcsc2021-pwn-bofbof:latest
-    ports:
-      - "4000:4000"
